@@ -1,119 +1,114 @@
-// /controllers/authController.js
+// /controllers/adminController.js
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
 const Admin = require('../models/admin');
+const nodemailer = require('nodemailer');
 
-// Set up email transporter
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+// Admin Registration Handler
+const adminRegister = async (req, res) => {
+    const { username, email, password } = req.body;
 
-// Registration Controller
-const registerAdmin = async (req, res) => {
-  const { email, password, username } = req.body;
-
-  // Validate email format, strong password, and check uniqueness
-  if (!email || !password || !username) {
-    return res.status(400).json({ message: 'All fields are required.' });
-  }
-
-  if (!/\S+@\S+\.\S+/.test(email)) {
-    return res.status(400).json({ message: 'Invalid email format.' });
-  }
-
-  if (password.length < 6) {
-    return res.status(400).json({ message: 'Password must be at least 6 characters.' });
-  }
-
-  try {
-    // Check if email or username exists
-    const existingAdmin = await Admin.findOne({ $or: [{ email }, { username }] });
-    if (existingAdmin) {
-      return res.status(400).json({ message: 'Email or username already exists.' });
+    // Simple validation
+    if (!username || !email || !password) {
+        return res.status(400).send('Please provide all fields');
     }
 
-    // Hash the password
+    // Check if email already exists
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin) {
+        return res.status(400).send('Email is already in use');
+    }
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new admin
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    const newAdmin = new Admin({ email, password: hashedPassword, username, verificationToken });
+    // Create new admin user
+    const newAdmin = new Admin({
+        username,
+        email,
+        password: hashedPassword,
+        role: 'admin',
+        isVerified: false, // Initially not verified
+    });
 
-    // Save admin to database
     await newAdmin.save();
 
     // Send verification email
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify/${verificationToken}`;
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Verify your Admin Account',
-      text: `Please verify your account by clicking the link: ${verificationUrl}`,
+    const verificationToken = jwt.sign({ email: newAdmin.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
     });
 
-    res.status(201).json({ message: 'Admin registered. Please check your email for verification.' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
-  }
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: newAdmin.email,
+        subject: 'Verify your email',
+        text: `Please verify your email by clicking the following link: ${process.env.BASE_URL}/admin/verify/${verificationToken}`
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            return res.status(500).send('Error sending email');
+        }
+        res.send('Registration successful. Please check your email for verification.');
+    });
 };
 
-// Login Controller
-const loginAdmin = async (req, res) => {
-  const { email, password } = req.body;
+// Admin Login Handler
+const adminLogin = async (req, res) => {
+    const { email, password } = req.body;
 
-  try {
-    const admin = await Admin.findOne({ email });
+    // Check if the admin exists
+    const admin = await Admin.findOne({ email: new RegExp('^' + email + '$', 'i') });  // Case-insensitive search
     if (!admin) {
-      return res.status(400).json({ message: 'Invalid credentials.' });
+        return res.status(400).json({ message: 'Admin not found' });
     }
 
-    // Check if the admin is verified
-    if (!admin.isVerified) {
-      return res.status(400).json({ message: 'Account is not verified.' });
-    }
-
-    const isMatch = await admin.comparePassword(password);
+    // Check password
+    const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials.' });
+        return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Create JWT token
-    const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const refreshToken = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    // Generate JWT
+    const token = jwt.sign({ id: admin._id, role: admin.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    // Log login attempt (activity tracking)
-    console.log(`Admin login attempt: ${admin.username}, IP: ${req.ip}, Time: ${new Date()}`);
+    // Set the token in the cookies
+    res.cookie('authToken', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' }); // Set cookie
 
-    res.status(200).json({ token, refreshToken, message: 'Login successful.' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
-  }
+    // Redirect to dashboard
+    res.redirect('/admin/dashboard');
 };
 
-// Verify Admin Controller (verification after registration)
+// Admin Email Verification Handler
 const verifyAdmin = async (req, res) => {
-  const { token } = req.params;
+    const { token } = req.params;
 
-  try {
-    const admin = await Admin.findOne({ verificationToken: token });
-    if (!admin) {
-      return res.status(400).json({ message: 'Invalid verification token.' });
+    try {
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Find the admin by email
+        const admin = await Admin.findOne({ email: decoded.email });
+
+        if (!admin) {
+            return res.status(400).send('Admin not found');
+        }
+
+        // Update the admin's verification status
+        admin.isVerified = true;
+        await admin.save();
+
+        res.send('Admin account verified successfully!');
+    } catch (error) {
+        res.status(400).send('Invalid or expired verification token');
     }
-
-    admin.isVerified = true;
-    admin.verificationToken = null;
-    await admin.save();
-
-    res.status(200).json({ message: 'Account verified successfully. You can now log in.' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
-  }
 };
 
-module.exports = { registerAdmin, loginAdmin, verifyAdmin };
+module.exports = { adminRegister, adminLogin, verifyAdmin };

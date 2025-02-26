@@ -12,7 +12,8 @@ const errorMiddleware = require('./middlewares/errorMiddleware'); // Import erro
 const connectDB = require('./config/database'); // Import DB connection
 
 // Import routes for registration and login
-const adminRoutes = require('./routes/adminRoutes');
+const authRoutes = require('./routes/authRoutes');
+const adminRoutes =  require('./routes/adminRoutes');
 
 dotenv.config();
 
@@ -33,7 +34,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Admin registration and login routes
-app.use('/admin', adminRoutes);
+app.use('/auth', authRoutes);
+app.use("/admin", adminRoutes)
 
 // Example route (Home)
 app.get('/', (req, res) => {
