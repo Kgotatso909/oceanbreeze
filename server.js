@@ -1,5 +1,4 @@
-// server.js
-
+// /server.js
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
@@ -13,7 +12,7 @@ const connectDB = require('./config/database'); // Import DB connection
 
 // Import routes for registration and login
 const authRoutes = require('./routes/authRoutes');
-const adminRoutes =  require('./routes/adminRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 dotenv.config();
 

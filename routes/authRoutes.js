@@ -1,4 +1,4 @@
-// /routes/adminRoutes.js
+// /routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
 const { adminRegister, adminLogin, verifyAdmin } = require('../controllers/authController');
@@ -18,6 +18,5 @@ router.post('/login', adminLogin);
 
 // Admin email verification route
 router.get('/verify/:token', verifyAdmin);
-
 
 module.exports = router;

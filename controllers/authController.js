@@ -1,5 +1,4 @@
-// /controllers/adminController.js
-
+// /controllers/authController.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/admin');
@@ -80,11 +79,17 @@ const adminLogin = async (req, res) => {
     const token = jwt.sign({ id: admin._id, role: admin.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     // Set the token in the cookies
-    res.cookie('authToken', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' }); // Set cookie
+    res.cookie('authToken', token, { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production',  // Set to false for non-HTTPS in development
+        maxAge: 60 * 60 * 1000  // Optional: Set cookie expiration time (1 hour)
+    }); 
+    
 
     // Redirect to dashboard
     res.redirect('/admin/dashboard');
 };
+
 
 // Admin Email Verification Handler
 const verifyAdmin = async (req, res) => {
