@@ -1,11 +1,26 @@
+<!-- /views/pages/admin/dashboard.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Dashboard</title>
 </head>
 <body>
-    <h1>welcome to dashboard</h1>
+    <h1>Admin Dashboard</h1>
+    <div>
+        <h2>Total Bookings: <%= totalBookings %></h2>
+        <h2>Total Revenue: $<%= totalRevenue %></h2>
+        <h2>Available Rooms: <%= availableRooms %></h2>
+    </div>
+    <div>
+        <h3>Approve Bookings</h3>
+
+        <% bookings.forEach(booking => { %>
+            <form action="/admin/approve-booking/<%= booking._id %>" method="POST">
+                <button type="submit">Approve Booking</button>
+            </form>
+        <% }); %>
+    </div>
 </body>
 </html>

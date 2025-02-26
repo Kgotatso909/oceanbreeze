@@ -1,9 +1,13 @@
+// /routes/adminRoutes.js
 const express = require('express');
 const router = express.Router();
 const protectRoute = require('../middlewares/authMiddleware');
+const { getAdminDashboard, approveBooking } = require('../controllers/adminController');
 
-router.get('/dashboard', protectRoute, (req, res) => {
-    res.render('pages/admin/dashboard'); // Make sure this page exists and is correctly set up
-});
+// Admin Dashboard Route
+router.get('/dashboard', protectRoute, getAdminDashboard);
+
+// Approve Booking Route
+router.post('/approve-booking/:id', protectRoute, approveBooking);
 
 module.exports = router;
