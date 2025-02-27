@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Rooms</title>
+</head>
+<body>
+    <h1>Manage Rooms</h1>
+    <a href="/admin/createRoom">Create New Room</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Room Number</th>
+                <th>Capacity</th>
+                <th>Price</th>
+                <th>Available</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% rooms.forEach(room => { %>
+                <tr>
+                    <td><%= room.roomNumber %></td>
+                    <td><%= room.capacity %></td>
+                    <td><%= room.price %></td>
+                    <td><%= room.available ? 'Yes' : 'No' %></td>
+                    <td>
+                        <a href="/admin/editRoom/<%= room._id %>">Edit</a>
+                        <form action="/admin/deleteRoom/<%= room._id %>" method="POST" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+</html>

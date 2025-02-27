@@ -2,12 +2,12 @@
 const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
-    guestName: {
-        type: String,
+    roomNumber: {
+        type: Number,
         required: true
     },
-    roomType: {
-        type: String,
+    numOfGuest: {
+        type: Number,
         required: true
     },
     checkInDate: {
@@ -20,28 +20,24 @@ const bookingSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'approved', 'rejected', 'Completed', 'Cancelled', 'No-show'],
-        default: 'Pending'
+        enum: ['pending', 'approved', 'rejected', 'completed', 'cancelled', 'no-show'],
+        default: 'pending'
     },
     cancellationPolicy: {
         type: String,
         enum: ['refundable', 'non-refundable'],
-        default: 'Non-refundable' // Default to non-refundable
+        default: 'non-refundable' // Ensured lowercase to match the enum
     },
-    // Add other fields like payment status, guest info, etc.
 }, {
     timestamps: true
 });
 
 // Method to check for date conflicts
-bookingSchema.statics.checkDateConflict = async function (roomType, checkInDate, checkOutDate) {
+bookingSchema.statics.checkDateConflict = async function (roomNumber, checkInDate, checkOutDate) {
     const conflictingBooking = await this.findOne({
-        roomType: roomType,
-        $or: [
-            { checkInDate: { $lt: checkOutDate }, checkOutDate: { $gt: checkInDate } },  // Overlapping dates
-            { checkInDate: { $gte: checkInDate, $lt: checkOutDate } },
-            { checkOutDate: { $gt: checkInDate, $lte: checkOutDate } }
-        ]
+        roomNumber: roomNumber,
+        checkInDate: { $lt: checkOutDate },  // Overlapping dates
+        checkOutDate: { $gt: checkInDate }
     });
 
     return conflictingBooking;

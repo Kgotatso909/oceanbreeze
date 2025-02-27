@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Room</title>
+</head>
+<body>
+    <h1>Edit Room: <%= room.roomNumber %></h1>
+    <form action="/admin/editRoom/<%= room._id %>" method="POST">
+        <label for="roomNumber">Room Number:</label>
+        <input type="number" id="roomNumber" name="roomNumber" value="<%= room.roomNumber %>" required><br><br>
+
+        <label for="capacity">Capacity:</label>
+        <input type="number" id="capacity" name="capacity" value="<%= room.capacity %>" required><br><br>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" value="<%= room.price %>" required><br><br>
+
+        <label for="available">Available:</label>
+        <input type="checkbox" id="available" name="available" <%= room.available ? 'checked' : '' %>><br><br>
+
+        <button type="submit">Update Room</button>
+    </form>
+    <form action="/admin/deleteRoom/<%= room._id %>" method="POST">
+        <button type="submit">Delete Room</button>
+    </form>
+</body>
+</html>

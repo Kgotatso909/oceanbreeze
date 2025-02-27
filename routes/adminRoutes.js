@@ -4,7 +4,26 @@ const router = express.Router();
 const protectRoute = require('../middlewares/authMiddleware');
 const { Parser } = require('json2csv');
 const PDFDocument = require('pdfkit');
+const roomController = require('../controllers/roomController');
 const { getAdminDashboard, approveBooking, getFilteredBookings, batchProcessBookings, sendBulkEmailNotifications } = require('../controllers/adminController');
+
+// Route to display all rooms
+router.get('/manageRooms', roomController.getAllRooms);
+
+// Route to show the form for creating a new room
+router.get('/createRoom', roomController.createRoomForm);
+
+// Route to handle creating a new room
+router.post('/createRoom', roomController.createRoom);
+
+// Route to show the form for editing a room
+router.get('/editRoom/:id', roomController.editRoomForm);
+
+// Route to handle updating an existing room
+router.post('/editRoom/:id', roomController.updateRoom);
+
+// Route to handle deleting a room
+router.post('/deleteRoom/:id', roomController.deleteRoom);
 
 // Admin Dashboard Route
 router.get('/dashboard', protectRoute, getAdminDashboard);

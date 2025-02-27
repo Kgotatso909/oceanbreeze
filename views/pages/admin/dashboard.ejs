@@ -1,26 +1,24 @@
-<!-- /views/pages/admin/dashboard.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
 </head>
 <body>
     <h1>Admin Dashboard</h1>
+    
+    <!-- Quick Access Links -->
     <div>
-        <h2>Total Bookings: <%= totalBookings %></h2>
-        <h2>Total Revenue: $<%= totalRevenue %></h2>
-        <h2>Available Rooms: <%= availableRooms %></h2>
+        <h2>Quick Access</h2>
+        <ul>
+            <li><a href="/admin/manageRooms">Manage Rooms</a></li>
+            <!-- You can add more links here for booking management, etc. -->
+            <li><a href="/admin/bookings">Manage Bookings</a></li>
+            <li><a href="/admin/settings">Settings</a></li>
+        </ul>
     </div>
-    <div>
-        <h3>Approve Bookings</h3>
 
-        <% bookings.forEach(booking => { %>
-            <form action="/admin/approve-booking/<%= booking._id %>" method="POST">
-                <button type="submit">Approve Booking</button>
-            </form>
-        <% }); %>
-    </div>
+    <!-- You can add more sections here as needed, like statistics, recent activity, etc. -->
+    
 </body>
 </html>

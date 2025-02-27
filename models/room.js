@@ -1,10 +1,11 @@
-// /models/room.js
+// models/room.js
 const mongoose = require('mongoose');
 
 const roomSchema = new mongoose.Schema({
-    name: {
-        type: String,
+    roomNumber: {
+        type: Number,
         required: true,
+        unique: true,  
     },
     capacity: {
         type: Number,
@@ -13,6 +14,7 @@ const roomSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true,
+        min: 0,  // Ensure price is a positive number
     },
     available: {
         type: Boolean,
