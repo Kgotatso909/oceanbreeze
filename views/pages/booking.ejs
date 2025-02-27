@@ -1,0 +1,37 @@
+<!-- views/booking.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Page</title>
+</head>
+<body>
+    <h1>Book a Room</h1>
+
+    <form action="/booking/create" method="POST">
+        <label for="guestName">Guest Name:</label>
+        <input type="text" name="guestName" required><br><br>
+
+        <label for="guestEmail">Guest Email:</label>
+        <input type="email" name="guestEmail" required><br><br>
+
+        <label for="roomType">Room Type:</label>
+        <input type="text" name="roomType" required><br><br>
+
+        <label for="checkInDate">Check-In Date:</label>
+        <input type="date" name="checkInDate" required><br><br>
+
+        <label for="checkOutDate">Check-Out Date:</label>
+        <input type="date" name="checkOutDate" required><br><br>
+
+        <label for="cancellationPolicy">Cancellation Policy:</label>
+        <select name="cancellationPolicy">
+            <option value="non-refundable">Non-Refundable</option>
+            <option value="refundable">Refundable</option>
+        </select><br><br>
+
+        <button type="submit">Submit Booking</button>
+    </form>
+</body>
+</html>

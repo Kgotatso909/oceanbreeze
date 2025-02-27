@@ -13,6 +13,7 @@ const connectDB = require('./config/database'); // Import DB connection
 // Import routes for registration and login
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 
 dotenv.config();
 
@@ -35,11 +36,17 @@ app.use(express.urlencoded({ extended: true }));
 // Admin registration and login routes
 app.use('/auth', authRoutes);
 app.use("/admin", adminRoutes)
+app.use("/booking", bookingRoutes)
 
 // Example route (Home)
 app.get('/', (req, res) => {
     res.render('pages/index');
 });
+
+app.get('/booking', (req, res) => {
+    res.render('pages/booking'); // Renders booking.ejs
+});
+
 
 // Apply error handling middleware (last middleware)
 app.use(errorMiddleware);
