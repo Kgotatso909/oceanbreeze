@@ -36,11 +36,15 @@ const bookingSchema = new mongoose.Schema({
 bookingSchema.statics.checkDateConflict = async function (roomNumber, checkInDate, checkOutDate) {
     const conflictingBooking = await this.findOne({
         roomNumber: roomNumber,
-        checkInDate: { $lt: checkOutDate },
-        checkOutDate: { $gt: checkInDate }
+        $or: [
+            { checkInDate: { $lt: checkOutDate }, checkOutDate: { $gt: checkInDate } }, // Full overlap
+            { checkInDate: { $gte: checkInDate, $lt: checkOutDate } }, // Starts during existing booking
+            { checkOutDate: { $gt: checkInDate, $lte: checkOutDate } }, // Ends during existing booking
+        ]
     });
 
     return conflictingBooking;
 };
+
 
 module.exports = mongoose.model('Booking', bookingSchema);

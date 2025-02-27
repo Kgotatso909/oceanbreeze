@@ -1,74 +1,109 @@
+// routes/bookingRoutes.js
 const express = require('express');
 const Booking = require('../models/booking');
 const Guest = require('../models/guest');
 const moment = require('moment-timezone'); // To handle time zone normalization
 const nodemailer = require('nodemailer'); // For sending email notifications
+const Room = require('../models/room');  // Import the Room model
 require('dotenv').config(); // Import environment variables from .env file
 
 const router = express.Router();
+
+
+// Render booking page with available rooms
+router.get('/', async (req, res) => {
+    try {
+        const allRooms = await Room.find();
+        const availableRooms = [];
+
+        for (const room of allRooms) {
+            const existingBooking = await Booking.findOne({
+                roomNumber: room.roomNumber,
+                checkInDate: { $lt: new Date() }, // Prevent bookings in the past
+                checkOutDate: { $gt: new Date() }
+            });
+
+            if (!existingBooking) {
+                availableRooms.push(room);
+            }
+        }
+
+        res.render('pages/booking', { rooms: availableRooms, message: '', success: false });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error loading booking page');
+    }
+});
 
 // Route for creating a booking (POST request)
 router.post('/', async (req, res) => {
     try {
         const { guestName, guestEmail, phoneNumber, numOfGuests, roomNumber, checkInDate, checkOutDate, cancellationPolicy } = req.body;
 
-        // Normalize the dates to UTC (you can adjust this to the guest's time zone if needed)
+        // Convert dates to UTC
         const normalizedCheckInDate = moment.tz(checkInDate, 'UTC').toDate();
         const normalizedCheckOutDate = moment.tz(checkOutDate, 'UTC').toDate();
 
-        // Check for date conflicts (ensure room availability)
-        const existingBooking = await Booking.checkDateConflict(roomNumber, normalizedCheckInDate, normalizedCheckOutDate);
-
-        if (existingBooking) {
-            return res.status(400).json({ message: 'The room is already booked for the selected dates.' });
+        // ❌ Ensure check-out is after check-in
+        if (normalizedCheckOutDate <= normalizedCheckInDate) {
+            const rooms = await Room.find();
+            return res.render('pages/booking', { 
+                rooms, 
+                message: 'Check-out date must be after check-in date.', 
+                success: false 
+            });
         }
 
-        // Create a new guest entry in the database
-        const guest = new Guest({
-            name: guestName,
-            email: guestEmail,
-            phoneNumber: phoneNumber,
-            numOfGuests: numOfGuests
+        // ❌ Check for overlapping bookings
+        const existingBooking = await Booking.findOne({
+            roomNumber: roomNumber,
+            $or: [
+                { checkInDate: { $lt: normalizedCheckOutDate }, checkOutDate: { $gt: normalizedCheckInDate } }, // Overlaps existing booking
+                { checkInDate: { $gte: normalizedCheckInDate, $lt: normalizedCheckOutDate } }, // Starts during existing booking
+                { checkOutDate: { $gt: normalizedCheckInDate, $lte: normalizedCheckOutDate } } // Ends during existing booking
+            ]
         });
 
+        if (existingBooking) {
+            const rooms = await Room.find();
+            return res.render('pages/booking', { 
+                rooms, 
+                message: 'The selected room is already booked for these dates.', 
+                success: false 
+            });
+        }
+
+        // Create guest entry
+        const guest = new Guest({ name: guestName, email: guestEmail, phoneNumber, numOfGuests });
         await guest.save();
 
-        // Create new booking entry in the database
-        const newBooking = new Booking({
-            roomNumber,
-            checkInDate: normalizedCheckInDate,
-            checkOutDate: normalizedCheckOutDate,
-            cancellationPolicy,
-            guest: guest._id // Reference to the guest model
+        // Create new booking
+        const newBooking = new Booking({ 
+            roomNumber, 
+            checkInDate: normalizedCheckInDate, 
+            checkOutDate: normalizedCheckOutDate, 
+            cancellationPolicy, 
+            guest: guest._id 
         });
 
         await newBooking.save();
 
-        // Create a transporter for email (you can use your preferred email service)
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
+        const rooms = await Room.find();
+        res.render('pages/booking', { 
+            rooms, 
+            message: 'Booking created successfully!', 
+            success: true 
         });
-
-        // Send a booking confirmation email
-        const mailOptions = {
-            from: process.env.EMAIL_USER, // sender address (from .env)
-            to: guestEmail, // recipient (from form)
-            subject: 'Booking Confirmation',
-            text: `Dear ${guestName},\n\nYour booking for room number ${roomNumber} has been received pending payment. You are booked from ${checkInDate} to ${checkOutDate}.\n\nCancellation Policy: ${cancellationPolicy}`
-        };
-
-        await transporter.sendMail(mailOptions);
-
-        // After success, render the confirmation page or send a success response
-        res.render('pages/booking', { message: 'Booking created successfully!', success: true });
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error creating booking' });
+        const rooms = await Room.find();
+
+        res.status(500).render('pages/booking', { 
+            rooms, 
+            message: 'Error creating booking', 
+            success: false 
+        });
     }
 });
 
