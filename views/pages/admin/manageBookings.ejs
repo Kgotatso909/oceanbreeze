@@ -21,8 +21,9 @@
                 <td><%= booking.checkOutDate.toDateString() %></td>
                 <td><%= booking.status %></td>
                 <td>
-                    
+                    <% if (booking.status === 'pending' || booking.status === 'approved') { %>
                         <a href="/admin/update-booking/<%= booking._id %>">Update</a>
+                    <% } %>
                 </td>
             </tr>
         <% }) %>
