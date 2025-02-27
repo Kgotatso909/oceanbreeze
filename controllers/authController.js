@@ -48,7 +48,7 @@ const adminRegister = async (req, res) => {
         from: process.env.EMAIL_USER,
         to: newAdmin.email,
         subject: 'Verify your email',
-        text: `Please verify your email by clicking the following link: ${process.env.BASE_URL}/admin/verify/${verificationToken}`
+        text: `Please verify your email by clicking the following link: ${process.env.BASE_URL}/auth/verify/${verificationToken}`
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
