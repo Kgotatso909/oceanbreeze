@@ -26,7 +26,7 @@ const bookingSchema = new mongoose.Schema({
     },
     guest: { 
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Guest', // Reference to the guest model
+        ref: Guest, 
         required: true
     }
 }, {
