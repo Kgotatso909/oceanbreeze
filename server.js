@@ -1,4 +1,3 @@
-// /server.js
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
@@ -36,17 +35,17 @@ app.use(express.urlencoded({ extended: true }));
 // Admin registration and login routes
 app.use('/auth', authRoutes);
 app.use("/admin", adminRoutes)
-app.use("/booking", bookingRoutes)
+app.use("/booking", bookingRoutes)  // This line maps to all booking-related routes
+
+// Route for GET request to render the booking page (form)
+app.get('/booking', (req, res) => {
+    res.render('pages/booking');  // Renders booking.ejs
+});
 
 // Example route (Home)
 app.get('/', (req, res) => {
     res.render('pages/index');
 });
-
-app.get('/booking', (req, res) => {
-    res.render('pages/booking'); // Renders booking.ejs
-});
-
 
 // Apply error handling middleware (last middleware)
 app.use(errorMiddleware);

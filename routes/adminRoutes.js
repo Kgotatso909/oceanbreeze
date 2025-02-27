@@ -4,8 +4,20 @@ const router = express.Router();
 const protectRoute = require('../middlewares/authMiddleware');
 const { Parser } = require('json2csv');
 const PDFDocument = require('pdfkit');
+const Booking = require('../models/booking');
 const roomController = require('../controllers/roomController');
+const bookingController = require('../controllers/bookingController');
 const { getAdminDashboard, approveBooking, getFilteredBookings, batchProcessBookings, sendBulkEmailNotifications } = require('../controllers/adminController');
+
+// Manage bookings (list)
+router.get('/manage-bookings', bookingController.manageBookings);
+
+// Update booking status
+router.get('/update-booking/:id', async (req, res) => {
+    const booking = await Booking.findById(req.params.id).populate('guest');
+    res.render('pages/admin/updateBooking', { booking });
+});
+router.post('/update-booking/:id', bookingController.updateBooking);
 
 // Route to display all rooms
 router.get('/manageRooms', roomController.getAllRooms);

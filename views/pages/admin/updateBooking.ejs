@@ -1,0 +1,20 @@
+<h1>Update Booking</h1>
+
+<form action="/admin/update-booking/<%= booking._id %>" method="POST">
+    <div class="form-group">
+        <label for="status">Booking Status</label>
+        <select name="status" id="status" class="form-control">
+            <% if (booking.status === 'pending') { %>
+                <option value="approved">Approve</option>
+                <option value="rejected">Reject</option>
+            <% } else if (booking.status === 'approved') { %>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="no-show">No Show</option>
+            <% } %>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+

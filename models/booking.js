@@ -1,12 +1,8 @@
-// models/booking.js
 const mongoose = require('mongoose');
+const Guest = require('./guest');  // Import the guest model
 
 const bookingSchema = new mongoose.Schema({
     roomNumber: {
-        type: Number,
-        required: true
-    },
-    numOfGuest: {
         type: Number,
         required: true
     },
@@ -26,17 +22,21 @@ const bookingSchema = new mongoose.Schema({
     cancellationPolicy: {
         type: String,
         enum: ['refundable', 'non-refundable'],
-        default: 'non-refundable' // Ensured lowercase to match the enum
+        default: 'non-refundable'
     },
+    guest: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Guest', // Reference to the guest model
+        required: true
+    }
 }, {
     timestamps: true
 });
 
-// Method to check for date conflicts
 bookingSchema.statics.checkDateConflict = async function (roomNumber, checkInDate, checkOutDate) {
     const conflictingBooking = await this.findOne({
         roomNumber: roomNumber,
-        checkInDate: { $lt: checkOutDate },  // Overlapping dates
+        checkInDate: { $lt: checkOutDate },
         checkOutDate: { $gt: checkInDate }
     });
 

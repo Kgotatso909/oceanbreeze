@@ -1,0 +1,30 @@
+
+<h1>Manage Bookings</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Room</th>
+            <th>Guest Name</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% bookings.forEach(booking => { %>
+            <tr>
+                <td><%= booking.roomNumber %></td>
+                <td><%= booking.guest.name %></td>
+                <td><%= booking.checkInDate.toDateString() %></td>
+                <td><%= booking.checkOutDate.toDateString() %></td>
+                <td><%= booking.status %></td>
+                <td>
+                    
+                        <a href="/admin/update-booking/<%= booking._id %>">Update</a>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
