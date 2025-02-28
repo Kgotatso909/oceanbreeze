@@ -50,4 +50,10 @@ router.post('/subscribe', newsletterController.subscribe);
 router.post('/send-newsletter', newsletterController.sendNewsletter);
 router.get('/send-newsletter', newsletterController.renderNewsletterPage);
 
+// Export Booking History (CSV)
+router.get('/export-booking-history', bookingController.exportBookingHistoryCSV);
+
+// Export Booking History (PDF)
+router.get('/export-booking-history-pdf', bookingController.exportBookingHistoryPDF);
+
 module.exports = router;

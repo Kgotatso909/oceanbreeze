@@ -1,6 +1,8 @@
 const Booking = require('../models/booking');
 const Guest = require('../models/guest');
 const Revenue = require('../models/revenue');
+const { Parser } = require('json2csv');
+const PDFDocument = require('pdfkit');
 const nodemailer = require('nodemailer');  // For email sending functionality
 
 // Helper function for sending email
@@ -75,3 +77,71 @@ exports.viewBookings = async (req, res) => {
     res.render('pages/admin/updateBooking', { booking });
 
 }
+
+
+// Export Booking History as CSV
+exports.exportBookingHistoryCSV = async (req, res) => {
+    try {
+        const bookings = await Booking.find().populate('guest');
+
+        // Convert bookings to CSV
+        const fields = ['_id', 'guest.name', 'roomNumber', 'checkInDate', 'checkOutDate', 'status'];
+        const json2csvParser = new Parser({ fields });
+        const csv = json2csvParser.parse(bookings);
+
+        res.header('Content-Type', 'text/csv');
+        res.attachment('booking-history.csv');
+        res.send(csv);
+    } catch (err) {
+        console.error('Error exporting bookings to CSV:', err);
+        res.status(500).send('Error exporting data');
+    }
+};
+
+// Export Booking History as PDF
+exports.exportBookingHistoryPDF = async (req, res) => {
+    try {
+        const bookings = await Booking.find().populate('guest');
+
+        const doc = new PDFDocument({ margin: 30 });
+        res.header('Content-Type', 'application/pdf');
+        res.attachment('booking-history.pdf');
+
+        doc.pipe(res);
+
+        // Header Styling
+        doc.fontSize(18).text('Booking History Report', { align: 'center' });
+        doc.moveDown(2);
+
+        // Table Header
+        doc
+            .fontSize(12)
+            .text('Booking ID', 50, doc.y, { continued: true })
+            .text('Guest', 180, doc.y, { continued: true })
+            .text('Room', 280, doc.y, { continued: true })
+            .text('Check-In', 350, doc.y, { continued: true })
+            .text('Check-Out', 420, doc.y, { continued: true })
+            .text('Status', 500);
+        doc.moveDown(0.5);
+        doc.strokeColor('#000').lineWidth(1).moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+        doc.moveDown(0.5);
+
+        // Table Rows
+        bookings.forEach(booking => {
+            doc
+                .fontSize(10)
+                .text(booking._id.toString().slice(-6), 50, doc.y, { continued: true })
+                .text(booking.guest.name, 180, doc.y, { continued: true })
+                .text(booking.roomNumber.toString(), 280, doc.y, { continued: true })
+                .text(booking.checkInDate.toISOString().split('T')[0], 350, doc.y, { continued: true })
+                .text(booking.checkOutDate.toISOString().split('T')[0], 420, doc.y, { continued: true })
+                .text(booking.status, 500);
+            doc.moveDown(0.5);
+        });
+
+        doc.end();
+    } catch (err) {
+        console.error('Error exporting bookings to PDF:', err);
+        res.status(500).send('Error exporting data');
+    }
+};
