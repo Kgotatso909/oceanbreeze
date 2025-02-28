@@ -7,41 +7,36 @@ const PDFDocument = require('pdfkit');
 const Booking = require('../models/booking');
 const roomController = require('../controllers/roomController');
 const bookingController = require('../controllers/bookingController');
-const { getAdminDashboard, approveBooking, getFilteredBookings, batchProcessBookings, sendBulkEmailNotifications } = require('../controllers/adminController');
+const { getAdminDashboard, getFilteredBookings, batchProcessBookings, sendBulkEmailNotifications } = require('../controllers/adminController');
 
 // Manage bookings (list)
-router.get('/manage-bookings', bookingController.manageBookings);
+router.get('/manage-bookings', protectRoute, bookingController.manageBookings);
 
 // Update booking status
-router.get('/update-booking/:id', async (req, res) => {
-    const booking = await Booking.findById(req.params.id).populate('guest');
-    res.render('pages/admin/updateBooking', { booking });
-});
-router.post('/update-booking/:id', bookingController.updateBooking);
+router.get('/update-booking/:id', protectRoute, bookingController.viewBookings);
+
+router.post('/update-booking/:id', protectRoute, bookingController.updateBooking);
 
 // Route to display all rooms
-router.get('/manageRooms', roomController.getAllRooms);
+router.get('/manageRooms', protectRoute, roomController.getAllRooms);
 
 // Route to show the form for creating a new room
-router.get('/createRoom', roomController.createRoomForm);
+router.get('/createRoom', protectRoute, roomController.createRoomForm);
 
 // Route to handle creating a new room
-router.post('/createRoom', roomController.createRoom);
+router.post('/createRoom', protectRoute, roomController.createRoom);
 
 // Route to show the form for editing a room
-router.get('/editRoom/:id', roomController.editRoomForm);
+router.get('/editRoom/:id', protectRoute, roomController.editRoomForm);
 
 // Route to handle updating an existing room
-router.post('/editRoom/:id', roomController.updateRoom);
+router.post('/editRoom/:id', protectRoute, roomController.updateRoom);
 
 // Route to handle deleting a room
-router.post('/deleteRoom/:id', roomController.deleteRoom);
+router.post('/deleteRoom/:id', protectRoute, roomController.deleteRoom);
 
 // Admin Dashboard Route
 router.get('/dashboard', protectRoute, getAdminDashboard);
-
-// Approve Booking Route
-router.post('/approve-booking/:id', protectRoute, approveBooking);
 
 router.get('/bookings/filter', getFilteredBookings);
 

@@ -1,5 +1,6 @@
 const Booking = require('../models/booking');
 const Guest = require('../models/guest');
+const Revenue = require('../models/revenue');
 const nodemailer = require('nodemailer');  // For email sending functionality
 
 // Helper function for sending email
@@ -43,14 +44,17 @@ exports.updateBooking = async (req, res) => {
         }
 
         // Handle status updates
-        if (status === 'approved') {
+        if (booking.status !== 'approved' && status === 'approved') {
             booking.status = 'approved';
             await booking.save();
+
+            await Revenue.addRevenue(booking.roomNumber);
 
             // Send approval email
             sendEmail(booking.guest.email, 'Booking Approved', 'Your booking has been approved.');
         } else if (status === 'rejected') {
-            await booking.deleteOne();
+            booking.status = 'rejected';
+            await booking.save();
 
             // Send rejection email
             sendEmail(booking.guest.email, 'Booking Rejected', 'Your booking has been rejected.');
@@ -61,6 +65,13 @@ exports.updateBooking = async (req, res) => {
 
         res.redirect('/admin/manage-bookings');
     } catch (error) {
+        console.error(error);
         res.status(500).send(error);
     }
 };
+
+exports.viewBookings = async (req, res) => {
+    const booking = await Booking.findById(req.params.id).populate('guest');
+    res.render('pages/admin/updateBooking', { booking });
+
+}

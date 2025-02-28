@@ -72,61 +72,29 @@ const getFilteredBookings = async (req, res) => {
 // Admin Dashboard: Overview with key metrics
 const getAdminDashboard = async (req, res) => {
     try {
+        // Count total bookings
         const totalBookings = await Booking.countDocuments();
-        const totalRevenue = await Revenue.aggregate([
-            { $group: { _id: null, total: { $sum: '$amount' } } },
-        ]);
-        const availableRooms = await Room.countDocuments({ available: true });
 
-        // Fetch some booking data (Example: to get bookingId for the approval form)
-        const bookings = await Booking.find({ status: 'pending' });
+        // Fetch total revenue from the Revenue model
+        const revenueRecord = await Revenue.findOne();
+        const totalRevenue = revenueRecord ? revenueRecord.totalRevenue : 0;
+
+        // Count available rooms (rooms that are not fully booked with approved bookings)
+        // const bookedRoomNumbers = await Booking.distinct("roomNumber", { status: "approved" });
+        // const availableRooms = await Room.countDocuments({ roomNumber: { $nin: bookedRoomNumbers } });
+        const availableRooms = await Room.countDocuments({ available: true });
+        // Fetch pending bookings for approval
+        const bookings = await Booking.find({ status: "pending" }).populate("guest");
 
         res.render('pages/admin/dashboard', {
             totalBookings,
-            totalRevenue: totalRevenue[0]?.total || 0,
+            totalRevenue,
             availableRooms,
-            bookings,  // Pass the bookings array to the view
+            bookings
         });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching dashboard data');
-    }
-};
-
-// Approve Booking and log action, also add revenue
-const approveBooking = async (req, res) => {
-    try {
-        const bookingId = req.params.id;
-        const booking = await Booking.findById(bookingId).populate('room');
-
-        if (!booking) {
-            return res.status(404).send('Booking not found');
-        }
-
-        booking.status = 'approved';
-        await booking.save();
-
-        // Create revenue entry
-        const revenue = new Revenue({
-            amount: booking.room.price,  // Assuming you want the room price to be the revenue
-            booking: bookingId,
-        });
-        await revenue.save();
-
-        // Log the action in the audit log
-        const logMessage = `Booking ${bookingId} approved by admin, revenue recorded: $${booking.room.price}`;
-        const log = new AuditLog({
-            action: 'Booking Approved',
-            message: logMessage,
-            admin: req.user.id,
-        });
-
-        await log.save();
-
-        res.send('Booking approved and revenue recorded');
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error approving booking');
     }
 };
 
@@ -174,4 +142,4 @@ const sendBulkEmailNotifications = async (req, res) => {
 };
 
 
-module.exports = { getAdminDashboard, approveBooking, getFilteredBookings, batchProcessBookings, sendBulkEmailNotifications };
+module.exports = { getAdminDashboard, getFilteredBookings, batchProcessBookings, sendBulkEmailNotifications };

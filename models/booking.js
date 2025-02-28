@@ -1,3 +1,4 @@
+//models/booking.js
 const mongoose = require('mongoose');
 const Guest = require('./guest');  // Import the guest model
 
@@ -36,6 +37,7 @@ const bookingSchema = new mongoose.Schema({
 bookingSchema.statics.checkDateConflict = async function (roomNumber, checkInDate, checkOutDate) {
     const conflictingBooking = await this.findOne({
         roomNumber: roomNumber,
+        status: { $ne: 'pending' }, // Ignore "pending" bookings
         $or: [
             { checkInDate: { $lt: checkOutDate }, checkOutDate: { $gt: checkInDate } }, // Full overlap
             { checkInDate: { $gte: checkInDate, $lt: checkOutDate } }, // Starts during existing booking
