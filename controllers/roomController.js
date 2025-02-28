@@ -84,3 +84,27 @@ exports.searchAvailableRooms = async (req, res) => {
         res.status(500).send('Error searching for available rooms.');
     }
 };
+
+exports.getRoomAvailability = async (req, res) => {
+    try {
+        const { roomNumber, year, month } = req.query;
+
+        if (!roomNumber || !year || !month) {
+            return res.status(400).send('Missing parameters');
+        }
+
+        // Check if the room exists
+        const room = await Room.findOne({ roomNumber });
+        if (!room) {
+            return res.status(404).send('Room not found');
+        }
+
+        // Get available dates for the selected month
+        const availableDates = await Booking.getAvailableDates(roomNumber, year, month);
+
+        res.render('pages/roomAvaliability', { roomNumber, availableDates, year, month });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching room availability');
+    }
+};

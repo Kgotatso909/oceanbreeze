@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Availability</title>
+    <style>
+        .calendar { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 5px; 
+            text-align: center; 
+            max-width: 400px; 
+            margin: auto;
+        }
+        .day, .day-header { 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            font-weight: bold;
+        }
+        .available { background-color: green; color: white; }
+        .unavailable { background-color: red; color: white; }
+        .day-header { background-color: #f0f0f0; } /* Header row */
+    </style>
+</head>
+<body>
+    <h1>Availability for Room <%= roomNumber %> in <%= year %>-<%= month %></h1>
+
+    <div class="calendar">
+        <!-- Days of the week -->
+        <% const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; %>
+        <% daysOfWeek.forEach(day => { %>
+            <div class="day-header"><%= day %></div>
+        <% }); %>
+
+        <% 
+            let firstDay = new Date(year, month - 1, 1).getDay(); // Get first day of the month
+            for (let i = 0; i < firstDay; i++) { %>
+            <div class="day"></div> <!-- Empty spaces before 1st of the month -->
+        <% } %>
+
+        <% for(let day = 1; day <= new Date(year, month, 0).getDate(); day++) { %>
+            <% let dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`; %>
+            <div class="day <%= availableDates.includes(dateStr) ? 'available' : 'unavailable' %>">
+                <%= day %>
+            </div>
+        <% } %>
+    </div>
+
+    <br>
+    <a href="/">Back to Home</a>
+</body>
+</html>

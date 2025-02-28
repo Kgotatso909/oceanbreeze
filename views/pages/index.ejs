@@ -19,7 +19,27 @@
     
         <button type="submit">Search Rooms</button>
     </form>
-    
+
+    <form action="/availability" method="GET">
+        <label for="roomNumber">Select Room:</label>
+        <select name="roomNumber" id="roomNumber" required>
+            <% rooms.forEach(room => { %>
+                <option value="<%= room.roomNumber %>">Room <%= room.roomNumber %> (Capacity: <%= room.capacity %>)</option>
+            <% }); %>
+        </select>
+
+        <label for="month">Select Month:</label>
+        <select name="month" id="month" required>
+            <% for(let i = 1; i <= 12; i++) { %>
+                <option value="<%= i %>"><%= new Date(2025, i - 1, 1).toLocaleString('default', { month: 'long' }) %></option>
+            <% } %>
+        </select>
+
+        <input type="hidden" name="year" value="2025"> <!-- Static for now, can be dynamic -->
+
+        <button type="submit">Check Availability</button>
+    </form>
+
 
 </body>
 </html>

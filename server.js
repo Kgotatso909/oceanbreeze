@@ -10,6 +10,7 @@ const errorMiddleware = require('./middlewares/errorMiddleware'); // Import erro
 const connectDB = require('./config/database'); // Import DB connection
 
 // Import routes for registration and login
+const homeRoutes = require('./routes/index');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
@@ -35,6 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Admin registration and login routes
 app.use('/', roomRoutes);
+app.use('/', homeRoutes);
 app.use('/auth', authRoutes);
 app.use("/admin", adminRoutes)
 app.use("/booking", bookingRoutes)  // This line maps to all booking-related routes
@@ -44,10 +46,7 @@ app.get('/booking', (req, res) => {
     res.render('pages/booking');  // Renders booking.ejs
 });
 
-// Example route (Home)
-app.get('/', (req, res) => {
-    res.render('pages/index');
-});
+
 
 // Apply error handling middleware (last middleware)
 app.use(errorMiddleware);
