@@ -8,6 +8,7 @@ const Booking = require('../models/booking');
 const roomController = require('../controllers/roomController');
 const bookingController = require('../controllers/bookingController');
 const newsletterController = require('../controllers/newsletterController');
+const emailController = require('../controllers/emailController');
 const { getAdminDashboard, getFilteredBookings, batchProcessBookings, sendBulkEmailNotifications } = require('../controllers/adminController');
 
 // Manage bookings (list)
@@ -55,5 +56,13 @@ router.get('/export-booking-history', bookingController.exportBookingHistoryCSV)
 
 // Export Booking History (PDF)
 router.get('/export-booking-history-pdf', bookingController.exportBookingHistoryPDF);
+
+// Render email sending page
+router.get('/send-email', (req, res) => {
+    res.render('pages/admin/sendEmail', { success: req.query.success, error: req.query.error });
+});
+
+// Handle email sending
+router.post('/send-email', emailController.sendEmail);
 
 module.exports = router;

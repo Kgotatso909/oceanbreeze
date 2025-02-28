@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Email</title>
+</head>
+<body>
+    <h2>Send Email to Subscribers</h2>
+
+    <% if (success) { %>
+        <p style="color: green;"><%= success %></p>
+    <% } %>
+    <% if (error) { %>
+        <p style="color: red;"><%= error %></p>
+    <% } %>
+
+    <form action="/admin/send-email" method="POST">
+        <label for="recipientEmail">Recipient Email:</label>
+        <input type="email" name="recipientEmail" required>
+
+        <label for="subject">Subject:</label>
+        <input type="text" name="subject" required>
+
+        <label for="template">Select Template:</label>
+        <select name="template" required>
+            <option value="welcome">Welcome Email</option>
+            <option value="promotion">Promotional Offer</option>
+            <option value="custom">Custom Message</option>
+        </select>
+
+        <label for="name">Recipient Name:</label>
+        <input type="text" name="name" required>
+
+        <div id="promoFields" style="display: none;">
+            <label for="discount">Discount (%):</label>
+            <input type="number" name="discount">
+            
+            <label for="promoCode">Promo Code:</label>
+            <input type="text" name="promoCode">
+        </div>
+
+        <label for="message">Message:</label>
+        <textarea name="message"></textarea>
+
+        <button type="submit">Send Email</button>
+    </form>
+
+    <script>
+        document.querySelector('select[name="template"]').addEventListener('change', function() {
+            document.getElementById('promoFields').style.display = this.value === 'promotion' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>
