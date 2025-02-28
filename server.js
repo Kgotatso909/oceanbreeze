@@ -13,6 +13,7 @@ const connectDB = require('./config/database'); // Import DB connection
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const roomRoutes = require('./routes/roomRoutes');
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Admin registration and login routes
+app.use('/', roomRoutes);
 app.use('/auth', authRoutes);
 app.use("/admin", adminRoutes)
 app.use("/booking", bookingRoutes)  // This line maps to all booking-related routes

@@ -1,0 +1,17 @@
+<h2>Available Rooms</h2>
+
+<p>Check-in: <%= checkInDate %> | Check-out: <%= checkOutDate %></p>
+
+<div class="room-list">
+    <% if (availableRooms.length > 0) { %>
+        <% availableRooms.forEach(room => { %>
+            <div class="room-card">
+                <h3>Room <%= room.roomNumber %></h3>
+                <p>Capacity: <%= room.capacity %> guests</p>
+                <p>Price: $<%= room.price %> per night</p>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <p>No rooms available for the selected dates.</p>
+    <% } %>
+</div>

@@ -1,4 +1,5 @@
 const Room = require('../models/room');
+const Booking = require('../models/booking');
 
 // Get all available rooms
 exports.getAllRooms = async (req, res) => {
@@ -61,5 +62,25 @@ exports.deleteRoom = async (req, res) => {
         res.redirect('/admin/manageRooms');
     } catch (err) {
         res.status(500).send('Error deleting room');
+    }
+};
+
+exports.searchAvailableRooms = async (req, res) => {
+    const { checkInDate, checkOutDate } = req.query;
+
+    if (!checkInDate || !checkOutDate) {
+        return res.status(400).send('Please provide both check-in and check-out dates.');
+    }
+
+    try {
+        const bookedRoomNumbers = await Booking.getAvailableRooms(new Date(checkInDate), new Date(checkOutDate));
+
+        // Find rooms that are NOT in the bookedRoomNumbers list
+        const availableRooms = await Room.find({ roomNumber: { $nin: bookedRoomNumbers } });
+
+        res.render('pages/availableRoom', { availableRooms, checkInDate, checkOutDate });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error searching for available rooms.');
     }
 };

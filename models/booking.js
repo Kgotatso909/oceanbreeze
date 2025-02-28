@@ -49,4 +49,19 @@ bookingSchema.statics.checkDateConflict = async function (roomNumber, checkInDat
 };
 
 
+bookingSchema.statics.getAvailableRooms = async function (checkInDate, checkOutDate) {
+    // Find room numbers that are booked and approved within the given date range
+    const bookedRoomNumbers = await this.distinct('roomNumber', {
+        status: 'approved',
+        $or: [
+            { checkInDate: { $lt: checkOutDate }, checkOutDate: { $gt: checkInDate } }, // Full overlap
+            { checkInDate: { $gte: checkInDate, $lt: checkOutDate } }, // Starts during existing booking
+            { checkOutDate: { $gt: checkInDate, $lte: checkOutDate } }, // Ends during existing booking
+        ],
+    });
+
+    return bookedRoomNumbers;
+};
+
+
 module.exports = mongoose.model('Booking', bookingSchema);
