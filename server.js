@@ -5,6 +5,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const protectRoute = require('./middlewares/authMiddleware');
+const setSecurityHeaders = require('./middlewares/helmet'); // Import custom helmet middleware
 const errorMiddleware = require('./middlewares/errorMiddleware'); // Import error middleware
 const connectDB = require('./config/database'); // Import DB connection
 
@@ -25,6 +26,7 @@ connectDB();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(setSecurityHeaders()); // Use the custom helmet middleware
 app.use(cors());
 app.use(morgan('dev'));
 app.use(cookieParser());

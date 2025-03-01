@@ -1,28 +1,39 @@
-// middlewares/helmet.js
 const helmet = require('helmet');
+const crypto = require('crypto');
+
+const generateNonce = () => {
+    return crypto.randomBytes(16).toString('base64');
+};
 
 const setSecurityHeaders = () => {
-    return helmet({
-        contentSecurityPolicy: {
-            directives: {
-                defaultSrc: ["'self'"], // Only allow resources from the same origin
-                scriptSrc: [
-                    "'self'", 
-                    'https://cdnjs.cloudflare.com', // Allow external scripts from CDN
-                    "'unsafe-inline'" // Allow inline scripts (can be risky, optional)
-                ],
-                styleSrc: [
-                    "'self'", 
-                    'https://cdnjs.cloudflare.com' // Allow external styles from CDN
-                ],
-                imgSrc: ["'self'", 'data:'], // Allow images from the same origin and inline images
-                connectSrc: ["'self'"], // Allow XMLHttpRequest (AJAX) from the same origin
-                fontSrc: ["'self'", 'https://cdnjs.cloudflare.com'], // Allow fonts from CDN
-                objectSrc: ["'none'"], // Disallow <object> elements
-                upgradeInsecureRequests: [] // Automatically upgrade HTTP requests to HTTPS
+    return (req, res, next) => {
+        const nonce = generateNonce(); // Generate nonce for this request
+
+        // Set the nonce for use in the CSP header and in the templates
+        res.locals.nonce = nonce;
+
+        helmet({
+            contentSecurityPolicy: {
+                directives: {
+                    defaultSrc: ["'self'"], // Only allow resources from the same origin
+                    scriptSrc: [
+                        "'self'", 
+                        'https://cdnjs.cloudflare.com', // Allow external scripts from CDN
+                    ],
+                    styleSrc: [
+                        "'self'", 
+                        'https://cdnjs.cloudflare.com', // Allow external styles from CDN
+                        `'nonce-${nonce}'` // Allow inline styles that match this nonce
+                    ],
+                    imgSrc: ["'self'", 'data:'], // Allow images from the same origin and inline images
+                    connectSrc: ["'self'"], // Allow XMLHttpRequest (AJAX) from the same origin
+                    fontSrc: ["'self'", 'https://cdnjs.cloudflare.com'], // Allow fonts from CDN
+                    objectSrc: ["'none'"], // Disallow <object> elements
+                    upgradeInsecureRequests: [] // Automatically upgrade HTTP requests to HTTPS
+                },
             },
-        },
-    });
+        })(req, res, next); // Invoke helmet with the nonce for each request
+    };
 };
 
 module.exports = setSecurityHeaders;

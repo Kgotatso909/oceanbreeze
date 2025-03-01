@@ -4,49 +4,599 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css" integrity="sha512-MQXduO8IQnJVq1qmySpN87QQkiR1bZHtorbJBD0tzy7/0U9+YIC93QWHeGTEoojMVHWWNkoCp8V6OzVSYrX0oQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css" integrity="sha512-MQXduO8IQnJVq1qmySpN87QQkiR1bZHtorbJBD0tzy7/0U9+YIC93QWHeGTEoojMVHWWNkoCp8V6OzVSYrX0oQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style  nonce="<%= nonce %>">
+        /* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth; 
+}
+
+body {
+    font-family: "Karla", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    color: #fff;
+}
+
+.section-title {
+    position: relative;
+    text-align: center;
+    margin-bottom: 40px;  /* Space between title and grid */
+    padding: 0 20px; /* Add padding for better spacing on small devices */
+}
+
+.section-title  {
+    font-size: 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+/* Before and After Effects for Section Title */
+.section-title::before,
+.section-title::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 20%;
+    height: 1px;
+    background-color: #333;
+    transform: translateY(-50%);
+}
+
+.section-title::before {
+    left: 0;
+}
+
+.section-title::after {
+    right: 0;
+}
+
+/* Optional decorative flair */
+.section-title::before {
+    background-image: linear-gradient(45deg, #ff7e5f, #feb47b);
+    background-size: 100% 2px;
+}
+
+.section-title::after {
+    background-image: linear-gradient(45deg, #ff7e5f, #feb47b);
+    background-size: 100% 2px;
+}
+
+/* Make the title lines responsive */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.5rem;  /* Smaller font size for mobile */
+    }
+
+    .section-title::before,
+    .section-title::after {
+        width: 15%;  /* Shorten the lines for smaller screens */
+    }
+}
+
+img {
+  object-fit: cover;
+}
+
+.toast {
+    max-width: 400px;
+    opacity: 0.9;
+    font-size: 1rem;
+    background-color: #28a745;
+    color: white;
+}
+
+.toast-header {
+    background-color: #218838;
+}
+
+.toast-body {
+    background-color: #28a745;
+}
+
+.toast-body small {
+    color: #fff;
+}
+
+/* navigation */
+.sticky-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    background: rgba(32, 31, 31, 0.932);
+}
+
+
+.navbar {
+    width: 100%;
+    z-index: 998; 
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: rgba(32, 31, 31, 0.932);
+}
+
+.navbar .logo a {
+    font-family: sans-serif;
+    font-size: 32px;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.navbar-menu ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.navbar-menu a {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: 0.3s ease;
+    position: relative;
+}
+
+.navbar-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(45deg, #ff0080, #ff8c00);
+    transition: 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.navbar-menu a:hover::after {
+    width: 100%;
+}
+
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    height: 100%;
+    width: 300px;
+    background: linear-gradient(135deg, #130f0f, #161616);
+    transition: left 0.3s ease;
+    z-index: 9999;
+}
+
+.sidebar.open {
+    left: 0;
+}
+
+.sidebar-content {
+    padding: 50px 20px;
+}
+
+.sidebar-content h3 {
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 15px 0;
+    border-bottom: 1px solid #fff;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+    color: #000;
+}
+
+#sidebar-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+#hamburger-toggle {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    padding: 10px;
+    cursor: pointer;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .navbar-menu {
+        display: none;
+    }
+
+    #hamburger-toggle {
+        display: block;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    body, html {
+        overflow-x: hidden;
+    }
+}
+
+
+/* Hero Section */
+.hero-section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    text-align: center;
+}
+
+.hero-content {
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hero-section h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+}
+
+.cta-button {
+    background-color: #ff6347;
+    color: white;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #e03e28;
+}
+
+/* Parallax Image */
+.paroller-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.dim-color {
+  position: absolute;
+  left: 0;
+  right: 0;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.paroller-image,
+.paroller-image-second {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 200%; /* Make image twice the width to allow scrolling */
+    height: 100%;
+    transform: translateX(-50%); /* Center the image */
+}
+
+
+.paroller-image img,
+.paroller-image-second img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-section p {
+        font-size: 1rem;
+    }
+
+    .cta-button {
+        font-size: 1rem;
+    }
+}
+
+.page-hero-header {
+    width: 100%;
+    min-height: 100%;
+    padding-top: 2rem;
+    background: url("https://images.pexels.com/photos/1809342/pexels-photo-1809342.jpeg?auto=compress&cs=tinysrgb&w=600");
+    background-position: center;
+    background-size: cover;
+    object-fit: cover;
+  }
+
+  .dim-bg-color {
+    position: absolute;
+    left: 0;
+    top: 0;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background: #33333383;
+  }
+
+
+.search-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.80);
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+/* Ensure the form wrapper fits within the container */
+.form-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: space-between;
+}
+
+/* Form Layout */
+.tm-booking-form {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    flex: 1;
+    min-width: 280px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Hover Effect */
+.tm-booking-form:hover {
+    transform: translateY(-5px);
+}
+
+/* Flex Row Layout for Inputs & Button */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    flex-direction: row; /* Keep horizontal layout by default */
+}
+
+/* Form Group Styling */
+.form-group {
+    flex: 1 1 200px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Labels */
+.form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 5px;
+}
+
+/* Inputs & Selects Styling */
+.form-control {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(19, 231, 235, 0.5);
+    border-radius: 8px;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #000;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    border-color: #00c6ff;
+    box-shadow: 0px 0px 8px rgba(0, 198, 255, 0.6);
+    outline: none;
+}
+
+/* Position the Calendar Icon */
+.input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(48, 17, 223, 0.7);
+    pointer-events: none;
+}
+
+/* Button Styling */
+button.btn {
+    padding: 12px 20px;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    text-transform: uppercase;
+    min-width: 150px;
+    box-sizing: border-box;
+}
+
+button.btn:hover {
+    background: linear-gradient(90deg, #0072ff, #00c6ff);
+    box-shadow: 0px 5px 15px rgba(0, 198, 255, 0.3);
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-container {
+        display: none;
+    }
+}
+    </style>
 </head>
 <body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="dim-color"></div>
+        <div class="paroller-container">
+            <div class="paroller-image">
+                <img src="https://images.pexels.com/photos/167538/pexels-photo-167538.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hero Background" />
+            </div>
+            <div class="paroller-image-second">
+                <img src="https://images.pexels.com/photos/167538/pexels-photo-167538.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Second Background" />
+            </div>
+        </div>
+    
+        <div class="hero-content">
+            <h1>The Screenshot Association</h1>
+            <p>Taba Tsa Batho Di Monate.</p>
+            <a href="/contact" class="cta-button">Contact us</a>
+        </div>
+    </section>
+    <div class="search-container">
+        <div class="form-wrapper">
+            <!-- First Form (Room Selection & Month) -->
+            <form action="/availability" method="GET" class="tm-booking-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <select name="roomNumber" id="roomNumber" class="form-control" required>
+                            <% rooms.forEach(room => { %>
+                                <option value="<%= room.roomNumber %>">Room <%= room.roomNumber %> (Capacity: <%= room.capacity %>)</option>
+                            <% }); %>
+                        </select>
+                    </div>
+    
+                    <div class="form-group">
+                        <select name="month" id="month" class="form-control" required>
+                            <% for(let i = 1; i <= 12; i++) { %>
+                                <option value="<%= i %>"><%= new Date(2025, i - 1, 1).toLocaleString('default', { month: 'long' }) %></option>
+                            <% } %>
+                        </select>
+                        <i class="fas fa-calendar-alt input-icon"></i>
+                    </div>
+    
+                    <input type="hidden" name="year" value="2025">
+                    <button type="submit" class="btn">Room Availability</button>
+                </div>
+            </form>
+    
+            <!-- Second Form (Check-in & Check-out) -->
+            <form action="/search-rooms" method="get" class="tm-booking-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" class="form-control datefield" name="checkInDate" id="inputCheckIn" placeholder="Check In" readonly>
+                        <i class="fas fa-calendar-alt input-icon"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control datefield" name="checkOutDate" id="inputCheckOut" placeholder="Check Out" readonly>
+                        <i class="fas fa-calendar-alt input-icon"></i>
+                    </div>
+    
+                    <button type="submit" class="btn">Check Availability</button>
+                </div>
+            </form>    
+        </div>
+    </div>
+
     <h1>Home page</h1>
     <a href="/booking">booking</a>
     <a href="/auth/login">login</a>
-
-    <form action="/search-rooms" method="GET">
-        <label for="checkInDate">Check-in Date:</label>
-        <input type="date" name="checkInDate" required>
-    
-        <label for="checkOutDate">Check-out Date:</label>
-        <input type="date" name="checkOutDate" required>
-    
-        <button type="submit">Search Rooms</button>
-    </form>
-
-    <form action="/availability" method="GET">
-        <label for="roomNumber">Select Room:</label>
-        <select name="roomNumber" id="roomNumber" required>
-            <% rooms.forEach(room => { %>
-                <option value="<%= room.roomNumber %>">Room <%= room.roomNumber %> (Capacity: <%= room.capacity %>)</option>
-            <% }); %>
-        </select>
-
-        <label for="month">Select Month:</label>
-        <select name="month" id="month" required>
-            <% for(let i = 1; i <= 12; i++) { %>
-                <option value="<%= i %>"><%= new Date(2025, i - 1, 1).toLocaleString('default', { month: 'long' }) %></option>
-            <% } %>
-        </select>
-
-        <input type="hidden" name="year" value="2025"> <!-- Static for now, can be dynamic -->
-
-        <button type="submit">Check Availability</button>
-    </form>
-
 
     <form action="/admin/subscribe" method="POST">
         <input type="email" name="email" placeholder="Enter your email" required>
         <button type="submit">Subscribe</button>
     </form>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paroller.js/1.4.7/jquery.paroller.min.js"></script>
+    <script src="js/flatpickr.js"></script>
+    <script src="js/paroller.js"></script>
 </body>
 </html>
