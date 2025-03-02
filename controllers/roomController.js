@@ -102,9 +102,34 @@ exports.getRoomAvailability = async (req, res) => {
         // Get available dates for the selected month
         const availableDates = await Booking.getAvailableDates(roomNumber, year, month);
 
-        res.render('pages/roomAvaliability', { roomNumber, availableDates, year, month });
+        // Get all bookings for the selected room in the given month
+        const bookings = await Booking.find({
+            roomNumber,
+            checkIn: { $gte: new Date(year, month - 1, 1) },
+            checkOut: { $lt: new Date(year, month, 1) }
+        });
+
+        // Get unavailable dates (dates where bookings overlap with the requested month)
+        const unavailableDates = bookings.map(booking => {
+            const dateRange = getDateRange(booking.checkIn, booking.checkOut);
+            return dateRange;
+        }).flat();
+
+        // Render the room availability page
+        res.render('pages/roomAvaliability', { roomNumber, availableDates, unavailableDates, year, month });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error fetching room availability');
     }
 };
+
+// Helper function to generate an array of dates between checkIn and checkOut
+function getDateRange(checkIn, checkOut) {
+    let dates = [];
+    let currentDate = new Date(checkIn);
+    while (currentDate < checkOut) {
+        dates.push(currentDate.toISOString().split('T')[0]); // Get date in YYYY-MM-DD format
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dates;
+}

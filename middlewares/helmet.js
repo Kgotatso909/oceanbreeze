@@ -19,15 +19,23 @@ const setSecurityHeaders = () => {
                     scriptSrc: [
                         "'self'", 
                         'https://cdnjs.cloudflare.com', // Allow external scripts from CDN
+                        'https://cdn.jsdelivr.net', // Allow external scripts from jsDelivr CDN
+                        `'nonce-${nonce}'` 
+                        
                     ],
                     styleSrc: [
                         "'self'", 
                         'https://cdnjs.cloudflare.com', // Allow external styles from CDN
+                        'https://cdn.jsdelivr.net', // Allow external styles from jsDelivr CDN
                         `'nonce-${nonce}'` // Allow inline styles that match this nonce
                     ],
                     imgSrc: ["'self'", 'data:'], // Allow images from the same origin and inline images
                     connectSrc: ["'self'"], // Allow XMLHttpRequest (AJAX) from the same origin
-                    fontSrc: ["'self'", 'https://cdnjs.cloudflare.com'], // Allow fonts from CDN
+                    fontSrc: [
+                        "'self'", 
+                        'https://cdnjs.cloudflare.com', // Allow fonts from CDN
+                        'https://cdn.jsdelivr.net', // Allow fonts from jsDelivr CDN
+                    ],
                     objectSrc: ["'none'"], // Disallow <object> elements
                     upgradeInsecureRequests: [] // Automatically upgrade HTTP requests to HTTPS
                 },

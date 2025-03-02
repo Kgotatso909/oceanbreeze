@@ -4,27 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Availability</title>
-    <style>
-        .calendar { 
-            display: grid; 
-            grid-template-columns: repeat(7, 1fr); 
-            gap: 5px; 
-            text-align: center; 
-            max-width: 400px; 
-            margin: auto;
+    <style nonce="<%= nonce %>">
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 20px;
+            color: #333;
         }
-        .day, .day-header { 
-            padding: 10px; 
-            border: 1px solid #ddd; 
+
+        h1 {
+            text-align: center;
+            color: #34495e;
+            margin-top: 10px;
+            font-size: 2rem;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(40px, 1fr));
+            gap: 5px;
+            text-align: center;
+            max-width: 90%;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .day, .day-header {
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .day-header {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+
+        .available {
+            background-color: #2ecc71;
+            color: white;
+            cursor: pointer;
+        }
+
+        .unavailable {
+            background-color: #e74c3c;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        /* Hover effect */
+        .day:hover {
+            transform: scale(1.05);
+        }
+
+        .day-header:hover {
+            background-color: #ddd;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .calendar {
+                grid-template-columns: repeat(7, minmax(30px, 1fr));
+                gap: 3px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .day, .day-header {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 480px) {
+            .calendar {
+                grid-template-columns: repeat(7, minmax(25px, 1fr));
+                padding: 10px;
+                gap: 2px;
+            }
+
+            .day, .day-header {
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            color: #3498db;
+            text-decoration: none;
+            margin-top: 20px;
             font-weight: bold;
         }
-        .available { background-color: green; color: white; }
-        .unavailable { background-color: red; color: white; }
-        .day-header { background-color: #f0f0f0; } /* Header row */
+
+        a:hover {
+            color: #2980b9;
+        }
     </style>
 </head>
 <body>
-    <h1>Availability for Room <%= roomNumber %> in <%= year %>-<%= month %></h1>
+
+    <% 
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June', 
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        const monthName = monthNames[month - 1]; // Convert number to month name
+    %>
+
+    <h1>Availability for Room <%= roomNumber %> in <%= monthName %> <%= year %></h1>
 
     <div class="calendar">
         <!-- Days of the week -->

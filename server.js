@@ -26,7 +26,7 @@ connectDB();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(setSecurityHeaders()); // Use the custom helmet middleware
+app.use(setSecurityHeaders()); 
 app.use(cors());
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -44,6 +44,9 @@ app.use("/booking", bookingRoutes)  // This line maps to all booking-related rou
 // Route for GET request to render the booking page (form)
 app.get('/booking', (req, res) => {
     res.render('pages/booking');  // Renders booking.ejs
+});
+app.get('/test', (req, res) => {
+    res.render('pages/test');  // Renders booking.ejs
 });
 
 

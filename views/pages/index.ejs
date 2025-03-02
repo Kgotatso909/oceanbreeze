@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css" integrity="sha512-MQXduO8IQnJVq1qmySpN87QQkiR1bZHtorbJBD0tzy7/0U9+YIC93QWHeGTEoojMVHWWNkoCp8V6OzVSYrX0oQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"  />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.1.6/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <link rel="stylesheet" href="css/styles.css">
     <style  nonce="<%= nonce %>">
         /* General Reset */
 * {
@@ -20,14 +24,11 @@ html {
 }
 
 body {
-    font-family: "Karla", serif;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-style: normal;
     width: 100%;
     height: 100%;
     overflow-x: hidden;
-    color: #fff;
+    color: #000;
+    background: #fff;
 }
 
 .section-title {
@@ -144,7 +145,6 @@ img {
 }
 
 .navbar .logo a {
-    font-family: sans-serif;
     font-size: 32px;
     color: white;
     font-weight: bold;
@@ -278,44 +278,87 @@ img {
     align-items: center;
     flex-direction: column;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     color: white;
     text-align: center;
 }
 
 .hero-content {
-    z-index: 2;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
+    color: white;
+    position: relative;
+    z-index: 1000;
 }
 
-.hero-section h1 {
+.hero-text {
+    max-width: 600px;
+    padding: 20px;
+}
+
+.tagline {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #1d0ea0;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+h1 {
     font-size: 4rem;
-    font-weight: 700;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+    font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.subtext {
+    font-size: 1.2rem;
+    opacity: 0.8;
     margin-bottom: 20px;
 }
 
-.hero-section p {
-    font-size: 1.25rem;
-    margin-bottom: 30px;
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.cta-button, .secondary-button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
 }
 
 .cta-button {
-    background-color: #ff6347;
+    background: linear-gradient(45deg, #0a1ed1, #048bc0);
     color: white;
-    padding: 12px 30px;
-    font-size: 1.2rem;
-    border-radius: 50px;
-    text-decoration: none;
-    margin-top: 20px;
-    transition: all 0.3s ease;
+    border: none;
 }
 
 .cta-button:hover {
-    background-color: #e03e28;
+    background: linear-gradient(45deg, #048bc0, #0a1ed1);
+    transform: scale(1.05);
+}
+
+.secondary-button {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+.secondary-button:hover {
+    background: white;
+    color: black;
+    transform: scale(1.05);
 }
 
 /* Parallax Image */
@@ -345,7 +388,7 @@ img {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 200%; /* Make image twice the width to allow scrolling */
+    width: 200%; 
     height: 100%;
     transform: translateX(-50%); /* Center the image */
 }
@@ -357,6 +400,7 @@ img {
     height: 100%;
     object-fit: cover;
 }
+
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
@@ -377,7 +421,7 @@ img {
     width: 100%;
     min-height: 100%;
     padding-top: 2rem;
-    background: url("https://images.pexels.com/photos/1809342/pexels-photo-1809342.jpeg?auto=compress&cs=tinysrgb&w=600");
+    background: url(" /images/hero-3.jpg");
     background-position: center;
     background-size: cover;
     object-fit: cover;
@@ -394,7 +438,11 @@ img {
   }
 
 
-.search-container {
+  .search-container {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(50%);
     width: 100%;
     max-width: 1200px;
     padding: 20px;
@@ -405,6 +453,14 @@ img {
     display: flex;
     justify-content: center;
     box-sizing: border-box;
+    z-index: 1000; 
+}
+
+/* Ensure the next section doesn't hide the search container */
+.next-section {
+    position: relative;
+    z-index: 1;
+    height: 50px;
 }
 
 /* Ensure the form wrapper fits within the container */
@@ -416,6 +472,7 @@ img {
     box-sizing: border-box;
     justify-content: space-between;
 }
+
 
 /* Form Layout */
 .tm-booking-form {
@@ -474,11 +531,85 @@ img {
     box-sizing: border-box;
 }
 
+/* Style dropdown options */
+.form-control option {
+    background-color: white; /* Default background */
+    color: #333; /* Default text color */
+    font-size: 1rem;
+    padding: 10px; /* Space inside options */
+}
+
+/* Hover effect for options (Some browsers may not support it) */
+.form-control option:hover {
+    background-color: #3498db; /* Highlight color */
+    color: white;
+}
+
+/* Style the selected option */
+.form-control option:checked {
+    background-color: #2ecc71; /* Green for selected */
+    color: white;
+    font-weight: bold;
+}
+
 .form-control:focus {
     border-color: #00c6ff;
     box-shadow: 0px 0px 8px rgba(0, 198, 255, 0.6);
     outline: none;
 }
+
+ /* Hide the default select dropdown */
+ .custom-dropdown {
+        position: relative;
+        width: 100%;
+    }
+
+    .custom-dropdown .selected {
+        background: white;
+        color: #000;
+        border: 2px solid #3498db;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Dropdown list */
+    .custom-dropdown .dropdown-list {
+        position: absolute;
+        width: 100%;
+        background: white;
+        color: #000;
+        border: 2px solid #3498db;
+        border-top: none;
+        display: none;
+        z-index: 1000;
+        border-radius: 5px;
+    }
+
+    .custom-dropdown.active .dropdown-list {
+        display: block;
+    }
+
+    .custom-dropdown .dropdown-list div {
+        padding: 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: 0.3s;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .custom-dropdown .dropdown-list div:last-child {
+        border-bottom: none;
+    }
+
+    .custom-dropdown .dropdown-list div:hover {
+        background: #3498db;
+        color: white;
+    }
 
 /* Position the Calendar Icon */
 .input-icon {
@@ -518,71 +649,314 @@ button.btn:hover {
         display: none;
     }
 }
+
+/* about section */
+.s-image {
+    transform: translateY(-60%);
+    background: #fff;
+}
+
+/* Room gallery */
+/* Room Gallery Section */
+.room-gallery {
+  background: #f8f9fa;
+}
+
+.room-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.room-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.room-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.room-card:hover .room-image {
+  transform: scale(1.05);
+}
+
+/* Overlay for Description */
+.room-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  transform: translateY(100%);
+  transition: transform 0.4s ease-in-out;
+}
+
+.room-card:hover .room-overlay {
+  transform: translateY(0);
+}
+
+.room-overlay h4 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.room-overlay p {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Swiper Navigation Buttons */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #007bff !important;
+  transition: 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: #0056b3 !important;
+}
+
     </style>
 </head>
 <body>
+    <%- include("../partials/_nav.ejs") %>
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="dim-color"></div>
         <div class="paroller-container">
             <div class="paroller-image">
-                <img src="https://images.pexels.com/photos/167538/pexels-photo-167538.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hero Background" />
+                <img src="/images/hero-2.jpg" alt="Hero Background" />
             </div>
             <div class="paroller-image-second">
-                <img src="https://images.pexels.com/photos/167538/pexels-photo-167538.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Second Background" />
+                <img src="/images/hero-2.jpg" alt="Second Background" />
             </div>
         </div>
     
         <div class="hero-content">
-            <h1>The Screenshot Association</h1>
-            <p>Taba Tsa Batho Di Monate.</p>
-            <a href="/contact" class="cta-button">Contact us</a>
-        </div>
+            <div class="hero-text">
+                <span class="tagline" data-aos="fade-up" data-aos-delay="500" >A Cozy Escape Awaits</span>
+                <h1 class="section-title-icon" data-aos="flip-left" data-aos-easing="ease-out-cubic" data-aos-delay="500" data-aos-duration="2000">
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                  Buffalo Lodge
+                  <i class="fa-regular fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+                </h1>
+                <p class="subtext" data-aos="fade-down" data-aos-delay="500" >Experience Comfort, Tranquility, and Warm Hospitality.</p>
+                <div class="button-group">
+                    <a href="/contact" class="cta-button" data-aos="fade-up-right" data-aos-delay="500" >Get in Touch</a>
+                    <a href="/about" class="secondary-button" data-aos="fade-up-left" data-aos-delay="500">Learn More</a>
+                </div>
+            </div>
+        </div>  
+        <div class="search-container">
+            <div class="form-wrapper">
+                <!-- First Form (Room Selection & Month) -->
+                <form action="/availability" method="GET" class="tm-booking-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <select name="roomNumber" id="roomNumber" class="form-control" required>
+                                <% rooms.forEach(room => { %>
+                                    <option value="<%= room.roomNumber %>">Room <%= room.roomNumber %> (Capacity: <%= room.capacity %>)</option>
+                                <% }); %>
+                            </select>
+                        </div>
+        
+                        <div class="form-group">
+                            <select name="month" id="month" class="form-control" required>
+                                <% for(let i = 1; i <= 12; i++) { %>
+                                    <option value="<%= i %>"><%= new Date(2025, i - 1, 1).toLocaleString('default', { month: 'long' }) %></option>
+                                <% } %>
+                            </select>
+                            <i class="fas fa-calendar-alt input-icon"></i>
+                        </div>
+        
+                        <input type="hidden" name="year" value="2025">
+                        <button type="submit" class="btn">Room Availability</button>
+                    </div>
+                </form>
+        
+                <!-- Second Form (Check-in & Check-out) -->
+                <form action="/search-rooms" method="get" class="tm-booking-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" class="form-control datefield" name="checkInDate" id="inputCheckIn" placeholder="Check In" readonly>
+                            <i class="fas fa-calendar-alt input-icon"></i>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control datefield" name="checkOutDate" id="inputCheckOut" placeholder="Check Out" readonly>
+                            <i class="fas fa-calendar-alt input-icon"></i>
+                        </div>
+        
+                        <button type="submit" class="btn">Check Availability</button>
+                    </div>
+                </form>    
+            </div>
+        </div>     
     </section>
-    <div class="search-container">
-        <div class="form-wrapper">
-            <!-- First Form (Room Selection & Month) -->
-            <form action="/availability" method="GET" class="tm-booking-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <select name="roomNumber" id="roomNumber" class="form-control" required>
-                            <% rooms.forEach(room => { %>
-                                <option value="<%= room.roomNumber %>">Room <%= room.roomNumber %> (Capacity: <%= room.capacity %>)</option>
-                            <% }); %>
-                        </select>
-                    </div>
-    
-                    <div class="form-group">
-                        <select name="month" id="month" class="form-control" required>
-                            <% for(let i = 1; i <= 12; i++) { %>
-                                <option value="<%= i %>"><%= new Date(2025, i - 1, 1).toLocaleString('default', { month: 'long' }) %></option>
-                            <% } %>
-                        </select>
-                        <i class="fas fa-calendar-alt input-icon"></i>
-                    </div>
-    
-                    <input type="hidden" name="year" value="2025">
-                    <button type="submit" class="btn">Room Availability</button>
-                </div>
-            </form>
-    
-            <!-- Second Form (Check-in & Check-out) -->
-            <form action="/search-rooms" method="get" class="tm-booking-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <input type="text" class="form-control datefield" name="checkInDate" id="inputCheckIn" placeholder="Check In" readonly>
-                        <i class="fas fa-calendar-alt input-icon"></i>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control datefield" name="checkOutDate" id="inputCheckOut" placeholder="Check Out" readonly>
-                        <i class="fas fa-calendar-alt input-icon"></i>
-                    </div>
-    
-                    <button type="submit" class="btn">Check Availability</button>
-                </div>
-            </form>    
+    <div class="next-section"></div>
+
+    <div class="container-xxl py-5 mt-5">
+        <div class="container">
+          <div class="row g-5">
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+              <div class="d-flex flex-column position-relative">
+                <img class="img-fluid rounded w-75 align-self-end f-image" src="/images/hero-1.jpg" alt="Guesthouse image">
+                <img class="img-fluid rounded w-50 pt-3 pe-3 s-image" src="/images/hero-1.jpg" alt="Guesthouse image" style="position: absolute; top: 55%; left: 10%; margin-top:-25%;">
+              </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500">
+              <h2 class="mb-4 text-black">Welcome to 
+                <span class="section-title welcome-title">Buffalo Lodge</span></h1>
+              <p class="mb-4 fs-5 text-muted">At our guesthouse, we strive to provide a comfortable and memorable experience for all our guests. From cozy rooms to top-notch amenities, we ensure that your stay is special.</p>
+              <p class="mb-4 fs-5 text-muted">We offer affordable accommodation, excellent service, and a variety of facilities to meet all your needs during your stay. Whether you're here for a relaxing vacation or a business trip, we have everything you need.</p>
+              <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="/about">Read More</a>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+
+      <section class="amenities-section py-5 position-relative">
+        <div class="dim-bg-color"></div>
+        <div class="container">
+          <h2 class="text-center mb-5 fw-bold section-title z-3">Amenities</h2>
+          <div class="row g-4 z-3">
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+              <div class="amenity-card">
+                <div class="icon"><i class="fas fa-wifi"></i></div>
+                <h4>Free Wi-Fi</h4>
+                <p>Enjoy high-speed internet access throughout our guesthouse, ensuring you're always connected.</p>
+              </div>
+            </div>
+      
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+              <div class="amenity-card">
+                <div class="icon"><i class="fas fa-utensils"></i></div>
+                <h4>Complimentary Breakfast</h4>
+                <p>Start your day with a fresh, delicious breakfast included with your stay.</p>
+              </div>
+            </div>
+      
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+              <div class="amenity-card">
+                <div class="icon"><i class="fas fa-swimmer"></i></div>
+                <h4>Swimming Pool</h4>
+                <p>Relax and unwind in our beautiful outdoor swimming pool, available for all guests.</p>
+              </div>
+            </div>
+      
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+              <div class="amenity-card">
+                <div class="icon"><i class="fas fa-parking"></i></div>
+                <h4>Free Parking</h4>
+                <p>Convenient on-site parking is available at no additional cost for our guests.</p>
+              </div>
+            </div>
+      
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
+              <div class="amenity-card">
+                <div class="icon"><i class="fas fa-dumbbell"></i></div>
+                <h4>Fitness Center</h4>
+                <p>Stay active with our well-equipped gym, open 24/7 for guest use.</p>
+              </div>
+            </div>
+      
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="600">
+              <div class="amenity-card">
+                <div class="icon"><i class="fas fa-concierge-bell"></i></div>
+                <h4>24/7 Front Desk</h4>
+                <p>Our friendly staff is available around the clock to assist you with anything you need.</p>
+              </div>
+            </div>
+      
+          </div>
+        </div>
+      </section>
+
+
+
+      <section class="room-gallery">
+       <div class="container">
+        <h2 class="section-title text-black">Our Room Gallery</h2>
+        <div class="room-display-container mt-5">
+          <!-- Room Display Block 1 -->
+          <div class="room-display-block">
+            <div class="room-image-gallery">
+              <div class="carousel">
+                <div class="carousel-images">
+                  <img src="/images/hero-2.jpg" alt="Room Image 1" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 2" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 3" class="carousel-image" />
+                </div>
+              </div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-number">Room 101</h3>
+              <p class="room-type">Deluxe Suite</p>
+              <p class="room-description">A spacious suite with luxurious amenities and a stunning view.</p>
+              <p class="capacity">Max Occupancy: 4 Guests</p>
+              <p class="price">$250 per night</p>
+              <a href="/room-details/101" class="cta-button">Book Now</a>
+            </div>
+          </div>
+          
+          <!-- Room Display Block 2 -->
+          <div class="room-display-block">
+            <div class="room-image-gallery">
+              <div class="carousel">
+                <div class="carousel-images">
+                  <img src="/images/hero-2.jpg" alt="Room Image 1" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 2" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 3" class="carousel-image" />
+                </div>
+              </div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-number">Room 102</h3>
+              <p class="room-type">Luxury Room</p>
+              <p class="room-description">A cozy room with modern amenities for a comfortable stay.</p>
+              <p class="capacity">Max Occupancy: 2 Guests</p>
+              <p class="price">$180 per night</p>
+              <a href="/room-details/102" class="cta-button">Book Now</a>
+            </div>
+          </div>
+          
+          <!-- Room Display Block 3 -->
+          <div class="room-display-block">
+            <div class="room-image-gallery">
+              <div class="carousel">
+                <div class="carousel-images">
+                  <img src="/images/hero-2.jpg" alt="Room Image 1" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 2" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 3" class="carousel-image" />
+                </div>
+              </div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-number">Room 103</h3>
+              <p class="room-type">Standard Room</p>
+              <p class="room-description">An affordable room perfect for a quick getaway.</p>
+              <p class="capacity">Max Occupancy: 2 Guests</p>
+              <p class="price">$120 per night</p>
+              <a href="/room-details/103" class="cta-button">Book Now</a>
+            </div>
+          </div>
+        </div>
+       </div>
+      </section>
 
     <h1>Home page</h1>
     <a href="/booking">booking</a>
@@ -594,9 +968,14 @@ button.btn:hover {
     </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.1.6/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paroller.js/1.4.7/jquery.paroller.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="js/flatpickr.js"></script>
     <script src="js/paroller.js"></script>
+    <script src="js/swiper.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
