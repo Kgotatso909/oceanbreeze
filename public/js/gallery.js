@@ -3,40 +3,40 @@
     AOS.init();
 
     const images = [
-        { url: "assets/images/outdoors/outdoor-1.jpg", category: "outdoor" },
-        { url: "assets/images/rooms/room-2.webp", category: "rooms" },
+        { url: "/images/outdoors/outdoor-1.jpg", category: "outdoor" },
+        { url: "/images/rooms/room-2.webp", category: "rooms" },
         {
-          url: "assets/images/activities/activity-1.jpg",
+          url: "/images/activities/activity-1.jpg",
           category: "activities",
         },
-        { url: "assets/images/outdoors/outdoor-2.jpg", category: "outdoor" },
-        { url: "assets/images/rooms/room-3.webp", category: "rooms" },
+        { url: "/images/outdoors/outdoor-2.jpg", category: "outdoor" },
+        { url: "/images/rooms/room-3.webp", category: "rooms" },
         {
-          url: "assets/images/activities/activity-2.jpg",
+          url: "/images/activities/activity-2.jpg",
           category: "activities",
         },
-        { url: "assets/images/outdoors/outdoor-3.jpg", category: "outdoor" },
-        { url: "assets/images/rooms/room-6.webp", category: "rooms" },
+        { url: "/images/outdoors/outdoor-3.jpg", category: "outdoor" },
+        { url: "/images/rooms/room-6.webp", category: "rooms" },
         {
-          url: "assets/images/activities/activity-3.jpg",
+          url: "/images/activities/activity-3.jpg",
           category: "activities",
         },
-        { url: "assets/images/outdoors/outdoor-4.jpg", category: "outdoor" },
-        { url: "assets/images/rooms/room-1.webp", category: "rooms" },
+        { url: "/images/outdoors/outdoor-4.jpg", category: "outdoor" },
+        { url: "/images/rooms/room-1.webp", category: "rooms" },
         {
-          url: "assets/images/activities/activity-4.jpg",
+          url: "/images/activities/activity-4.jpg",
           category: "activities",
          },
-        { url: "assets/images/outdoors/outdoor-5.jpg", category: "outdoor" },
-        { url: "assets/images/rooms/room-5.webp", category: "rooms" },
+        { url: "/images/outdoors/outdoor-5.jpg", category: "outdoor" },
+        { url: "/images/rooms/room-5.webp", category: "rooms" },
         {
-          url: "assets/images/activities/activity-5.jpg",
+          url: "/images/activities/activity-5.jpg",
           category: "activities",
         },
-        { url: "assets/images/outdoors/outdoor-6.jpg", category: "outdoor" },
-        { url: "assets/images/rooms/room-4.webp", category: "rooms" },
+        { url: "/images/outdoors/outdoor-6.jpg", category: "outdoor" },
+        { url: "/images/rooms/room-4.webp", category: "rooms" },
         {
-          url: "assets/images/activities/activity-6.jpg",
+          url: "/images/activities/activity-6.jpg",
           category: "activities",
         },
       ];
