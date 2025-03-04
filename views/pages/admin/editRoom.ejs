@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Edit Room: <%= room.roomNumber %></h1>
-    <form action="/admin/editRoom/<%= room._id %>" method="POST">
+    <form action="/admin/editRoom/<%= room._id %>" method="POST" enctype="multipart/form-data">
         <label for="roomNumber">Room Number:</label>
         <input type="number" id="roomNumber" name="roomNumber" value="<%= room.roomNumber %>" required><br><br>
 
@@ -16,11 +16,29 @@
         <label for="price">Price:</label>
         <input type="number" id="price" name="price" value="<%= room.price %>" required><br><br>
 
+        <label for="roomType">Room Type:</label>
+        <input type="text" id="roomType" name="roomType" value="<%= room.roomType %>" required><br><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required><%= room.description %></textarea><br><br>
+
         <label for="available">Available:</label>
         <input type="checkbox" id="available" name="available" <%= room.available ? 'checked' : '' %>><br><br>
 
+        <label for="images">Upload New Images (optional):</label>
+        <input type="file" id="images" name="images" multiple accept="image/*"><br><br>
+
+        <!-- Display existing images -->
+        <div>
+            <h3>Current Images:</h3>
+            <% room.images.forEach(image => { %>
+                <img src="<%= image %>" alt="Room Image" width="100">
+            <% }) %>
+        </div>
+
         <button type="submit">Update Room</button>
     </form>
+
     <form action="/admin/deleteRoom/<%= room._id %>" method="POST">
         <button type="submit">Delete Room</button>
     </form>

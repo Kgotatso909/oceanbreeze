@@ -9,6 +9,7 @@ const roomController = require('../controllers/roomController');
 const bookingController = require('../controllers/bookingController');
 const newsletterController = require('../controllers/newsletterController');
 const emailController = require('../controllers/emailController');
+const upload = require('../middlewares/upload');
 const { getAdminDashboard, getFilteredBookings, batchProcessBookings, sendBulkEmailNotifications } = require('../controllers/adminController');
 
 // Manage bookings (list)
@@ -26,7 +27,7 @@ router.get('/manageRooms', protectRoute, roomController.getAllRooms);
 router.get('/createRoom', protectRoute, roomController.createRoomForm);
 
 // Route to handle creating a new room
-router.post('/createRoom', protectRoute, roomController.createRoom);
+router.post('/createRoom', upload.array('images', 5), roomController.createRoom);
 
 // Route to show the form for editing a room
 router.get('/editRoom/:id', protectRoute, roomController.editRoomForm);

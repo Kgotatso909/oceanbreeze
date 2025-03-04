@@ -11,4 +11,10 @@ $(document).ready(function() {
         type: 'foreground',
         direction: 'horizontal' 
     });
+
+    $('.hero-image').paroller({
+        factor: 0.3, // Slower scrolling effect for the background image
+        type: 'background', // Parallax effect applied to the background of the image
+        direction: 'vertical' // Scroll direction is vertical
+      });
 });

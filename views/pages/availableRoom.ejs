@@ -1,17 +1,217 @@
-<h2>Available Rooms</h2>
 
-<p>Check-in: <%= checkInDate %> | Check-out: <%= checkOutDate %></p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style nonce="<%= nonce %>">
+        /* Reset Default Margin and Padding */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-<div class="room-list">
-    <% if (availableRooms.length > 0) { %>
-        <% availableRooms.forEach(room => { %>
-            <div class="room-card">
-                <h3>Room <%= room.roomNumber %></h3>
-                <p>Capacity: <%= room.capacity %> guests</p>
-                <p>Price: $<%= room.price %> per night</p>
-            </div>
-        <% }) %>
-    <% } else { %>
-        <p>No rooms available for the selected dates.</p>
-    <% } %>
-</div>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: #ff6600;
+  margin: 0.8rem auto;
+  border-radius: 2px;
+}
+
+.date-info {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+.room-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.room-card {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.room-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.room-image-gallery {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.carousel {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.carousel-images {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.carousel-image.active {
+  opacity: 1;
+}
+
+.room-details {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.room-number {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+.room-type {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ff6600;
+  margin-bottom: 1.5rem;
+}
+
+.cta-button {
+  padding: 0.8rem 1.5rem;
+  background-color: #ff6600;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+}
+
+.cta-button:hover {
+  background-color: #e65c00;
+  transform: scale(1.05);
+}
+
+.cta-button:active {
+  transform: scale(1);
+}
+
+.no-rooms-message {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #555;
+  margin-top: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .room-card {
+    width: 48%;
+  }
+}
+
+@media (max-width: 768px) {
+  .room-card {
+    width: 100%;
+  }
+
+  .room-image-gallery {
+    height: 180px;
+  }
+
+  .room-details {
+    padding: 1rem;
+  }
+}
+
+    </style>
+</head>
+<body>
+    <h2 class="section-title">Available Rooms</h2>
+
+    <p class="date-info">Check-in: <%= checkInDate %> | Check-out: <%= checkOutDate %></p>
+    
+    <div class="room-list">
+        <% if (availableRooms.length > 0) { %>
+            <% availableRooms.forEach(room => { %>
+                <div class="room-card">
+                    <div class="room-image-gallery">
+                        <div class="carousel">
+                          
+                        </div>
+                    </div>
+                    <div class="room-details">
+                        <h3 class="room-number">Room <%= room.roomNumber %></h3>
+                        <p class="room-type">Capacity: <%= room.capacity %> guests</p>
+                        <p class="price">Price: R<%= room.price %> per night</p>
+                        <a href="/book-room?room=<%= room.roomNumber %>&checkIn=<%= checkInDate %>&checkOut=<%= checkOutDate %>" class="cta-button">Book Now</a>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="no-rooms-message">No rooms available for the selected dates.</p>
+        <% } %>
+    </div>
+    
+
+</body>
+</html>

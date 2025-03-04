@@ -4,7 +4,7 @@ const Booking = require('../models/booking');
 // Get all available rooms
 exports.getAllRooms = async (req, res) => {
     try {
-        const rooms = await Room.find({ available: true }); // Show only available rooms
+        const rooms = await Room.find({ available: true }); 
         res.render('pages/admin/manageRooms', { rooms });
     } catch (err) {
         res.status(500).send('Error fetching rooms');
@@ -16,17 +16,29 @@ exports.createRoomForm = (req, res) => {
     res.render('pages/admin/createRoom');
 };
 
-// Create a new room
+
 exports.createRoom = async (req, res) => {
-    const { roomNumber, capacity, price, available } = req.body;
     try {
-        const newRoom = new Room({ roomNumber, capacity, price, available: available === 'on' }); // Handle checkbox for availability
+        const { roomNumber, capacity, price, roomType, description, available } = req.body;
+        const images = req.files.map(file => `/images/upload/${file.filename}`);
+
+        const newRoom = new Room({
+            roomNumber,
+            capacity,
+            price,
+            roomType,
+            description,
+            available: available === 'on', // Handle checkbox value
+            images
+        });
+
         await newRoom.save();
-        res.redirect('/admin/manageRooms');
-    } catch (err) {
-        res.status(500).send('Error creating room');
+        res.redirect('/admin/manageRooms')
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
+
 
 // Show the form to edit an existing room
 exports.editRoomForm = async (req, res) => {
@@ -45,14 +57,23 @@ exports.editRoomForm = async (req, res) => {
 // Update an existing room
 exports.updateRoom = async (req, res) => {
     const roomId = req.params.id;
-    const { roomNumber, capacity, price, available } = req.body;
+    const { roomNumber, capacity, price, roomType, description, available } = req.body;
+
     try {
-        await Room.findByIdAndUpdate(roomId, { roomNumber, capacity, price, available: available === 'on' });
+        let updateData = { roomNumber, capacity, price, roomType, description, available: available === 'on' };
+
+        // If new images are uploaded, update the images array
+        if (req.files && req.files.length > 0) {
+            updateData.images = req.files.map(file => `/images/upload/${file.filename}`);
+        }
+
+        await Room.findByIdAndUpdate(roomId, updateData);
         res.redirect('/admin/manageRooms');
     } catch (err) {
         res.status(500).send('Error updating room');
     }
 };
+
 
 // Delete a room
 exports.deleteRoom = async (req, res) => {

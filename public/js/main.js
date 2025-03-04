@@ -114,4 +114,5 @@ document.addEventListener('DOMContentLoaded', function () {
               // Slide every 3 seconds for each carousel independently
               setInterval(showNextImage, 3000);
             });    
+
 });

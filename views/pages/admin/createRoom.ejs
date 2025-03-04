@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Create New Room</h1>
-    <form action="/admin/createRoom" method="POST">
+    <form action="/admin/createRoom" method="POST" enctype="multipart/form-data">
         <label for="roomNumber">Room Number:</label>
         <input type="number" id="roomNumber" name="roomNumber" required><br><br>
 
@@ -16,8 +16,17 @@
         <label for="price">Price:</label>
         <input type="number" id="price" name="price" required><br><br>
 
+        <label for="roomType">Room Type:</label>
+        <input type="text" id="roomType" name="roomType" required><br><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea><br><br>
+
         <label for="available">Available:</label>
         <input type="checkbox" id="available" name="available"><br><br>
+
+        <label for="images">Upload Images:</label>
+        <input type="file" id="images" name="images" multiple accept="image/*"><br><br>
 
         <button type="submit">Create Room</button>
     </form>

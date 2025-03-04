@@ -270,497 +270,260 @@ img {
 }
 
 
-/* Hero Section */
-.hero-section {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    position: relative;
-    overflow: visible;
-    color: white;
-    text-align: center;
+/* About Hero Section */
+.about-hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px; /* Suitable height for About section */
+  width: 100%; /* Full width */
+  background: url('images/hero-3.jpg') no-repeat center center/cover; /* Image background */
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+  color: white;
 }
 
-.hero-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    height: 100vh;
-    color: white;
-    position: relative;
-    z-index: 1000;
-}
-
-.hero-text {
-    max-width: 600px;
-    padding: 20px;
-}
-
-.tagline {
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #1d0ea0;
-    font-weight: bold;
-    display: block;
-    margin-bottom: 10px;
-}
-
-h1 {
-    font-size: 4rem;
-    font-weight: bold;
-    margin-bottom: 15px;
-    line-height: 1.2;
-}
-
-.subtext {
-    font-size: 1.2rem;
-    opacity: 0.8;
-    margin-bottom: 20px;
-}
-
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.cta-button, .secondary-button {
-    padding: 12px 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-}
-
-.cta-button {
-    background: linear-gradient(45deg, #0a1ed1, #048bc0);
-    color: white;
-    border: none;
-}
-
-.cta-button:hover {
-    background: linear-gradient(45deg, #048bc0, #0a1ed1);
-    transform: scale(1.05);
-}
-
-.secondary-button {
-    background: transparent;
-    border: 2px solid white;
-    color: white;
-}
-
-.secondary-button:hover {
-    background: white;
-    color: black;
-    transform: scale(1.05);
-}
-
-/* Parallax Image */
-.paroller-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    overflow: hidden;
-}
-
-.dim-color {
+/* Background gradient overlay */
+.about-hero::before {
+  content: '';
   position: absolute;
+  top: 0;
   left: 0;
-  right: 0;
-  content: "";
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.4));
+  z-index: 1;
+}
+
+/* Content inside the hero section */
+.about-hero-content {
+  position: relative;
   z-index: 2;
+  color: white;
+  padding: 20px;
+  text-align: center;
 }
 
-.paroller-image,
-.paroller-image-second {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 200%; 
-    height: 100%;
-    transform: translateX(-50%); /* Center the image */
+/* Title */
+.about-title {
+  font-size: 3.5rem; /* Large title */
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  animation: fadeInUp 1s ease-out;
 }
 
-
-.paroller-image img,
-.paroller-image-second img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+/* Description */
+.about-description {
+  font-size: 1.2rem;
+  max-width: 80%;
+  margin: 0 auto;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  opacity: 0.85;
+  margin-bottom: 25px;
+  animation: fadeInUp 1.5s ease-out;
 }
 
-
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-    .hero-section h1 {
-        font-size: 2.5rem;
-    }
-
-    .hero-section p {
-        font-size: 1rem;
-    }
-
-    .cta-button {
-        font-size: 1rem;
-    }
+/* Call to Action Button */
+.about-cta {
+  display: inline-block;
+  padding: 15px 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 2px solid #fff;
+  background-color: transparent;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 1px;
+  border-radius: 30px;
+  transition: background-color 0.3s ease;
 }
 
-.page-hero-header {
-    width: 100%;
-    min-height: 100%;
-    padding-top: 2rem;
-    background: url(" /images/hero-3.jpg");
-    background-position: center;
-    background-size: cover;
-    object-fit: cover;
+/* Hover effect on CTA */
+.about-cta:hover {
+  background-color: #fff;
+  color: #333;
+}
+
+/* Fade-in animation for elements */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
-  .dim-bg-color {
-    position: absolute;
-    left: 0;
-    top: 0;
-    content: "";
-    width: 100%;
-    height: 100%;
-    background: #33333383;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-
-
-  .search-container {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(50%);
-    width: 100%;
-    max-width: 1200px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.80);
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: center;
-    box-sizing: border-box;
-    z-index: 1000; 
 }
 
-/* Ensure the next section doesn't hide the search container */
-.next-section {
-    position: relative;
-    z-index: 1;
-    height: 50px;
-}
-
-/* Ensure the form wrapper fits within the container */
-.form-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    width: 100%;
-    box-sizing: border-box;
-    justify-content: space-between;
-}
-
-
-/* Form Layout */
-.tm-booking-form {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 12px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-    flex: 1;
-    min-width: 280px;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-/* Hover Effect */
-.tm-booking-form:hover {
-    transform: translateY(-5px);
-}
-
-/* Flex Row Layout for Inputs & Button */
-.form-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-    flex-direction: row; /* Keep horizontal layout by default */
-}
-
-/* Form Group Styling */
-.form-group {
-    flex: 1 1 200px;
-    box-sizing: border-box;
-    position: relative;
-}
-
-/* Labels */
-.form-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #000;
-    margin-bottom: 5px;
-}
-
-/* Inputs & Selects Styling */
-.form-control {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid rgba(19, 231, 235, 0.5);
-    border-radius: 8px;
-    font-size: 16px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #000;
-    transition: 0.3s;
-    box-sizing: border-box;
-}
-
-/* Style dropdown options */
-.form-control option {
-    background-color: white; /* Default background */
-    color: #333; /* Default text color */
-    font-size: 1rem;
-    padding: 10px; /* Space inside options */
-}
-
-/* Hover effect for options (Some browsers may not support it) */
-.form-control option:hover {
-    background-color: #3498db; /* Highlight color */
-    color: white;
-}
-
-/* Style the selected option */
-.form-control option:checked {
-    background-color: #2ecc71; /* Green for selected */
-    color: white;
-    font-weight: bold;
-}
-
-.form-control:focus {
-    border-color: #00c6ff;
-    box-shadow: 0px 0px 8px rgba(0, 198, 255, 0.6);
-    outline: none;
-}
-
- /* Hide the default select dropdown */
- .custom-dropdown {
-        position: relative;
-        width: 100%;
-    }
-
-    .custom-dropdown .selected {
-        background: white;
-        color: #000;
-        border: 2px solid #3498db;
-        padding: 12px;
-        font-size: 1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    /* Dropdown list */
-    .custom-dropdown .dropdown-list {
-        position: absolute;
-        width: 100%;
-        background: white;
-        color: #000;
-        border: 2px solid #3498db;
-        border-top: none;
-        display: none;
-        z-index: 1000;
-        border-radius: 5px;
-    }
-
-    .custom-dropdown.active .dropdown-list {
-        display: block;
-    }
-
-    .custom-dropdown .dropdown-list div {
-        padding: 10px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: 0.3s;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .custom-dropdown .dropdown-list div:last-child {
-        border-bottom: none;
-    }
-
-    .custom-dropdown .dropdown-list div:hover {
-        background: #3498db;
-        color: white;
-    }
-
-/* Position the Calendar Icon */
-.input-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: rgba(48, 17, 223, 0.7);
-    pointer-events: none;
-}
-
-/* Button Styling */
-button.btn {
-    padding: 12px 20px;
-    background: linear-gradient(90deg, #00c6ff, #0072ff);
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
-    text-transform: uppercase;
-    min-width: 150px;
-    box-sizing: border-box;
-}
-
-button.btn:hover {
-    background: linear-gradient(90deg, #0072ff, #00c6ff);
-    box-shadow: 0px 5px 15px rgba(0, 198, 255, 0.3);
-    transform: scale(1.05);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .search-container {
-        display: none;
-    }
-}
-
-/* about section */
-.s-image {
-    transform: translateY(-60%);
-    background: #fff;
-}
-.waves-circles-opacity {
-    left: 0;
-    bottom: 0;
+/* Full width and height for the body */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  margin: 0;
 }
 
     </style>
 </head>
 <body>
     <%- include("../partials/_nav.ejs") %>
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="dim-color"></div>
-        <div class="paroller-container">
-            <div class="paroller-image">
-                <img src="/images/hero-2.jpg" alt="Hero Background" />
-            </div>
-            <div class="paroller-image-second">
-                <img src="/images/hero-2.jpg" alt="Second Background" />
-            </div>
+    <section class="about-hero">
+        <div class="about-hero-content">
+          <h1 class="about-title">Who We Are</h1>
+          <p class="about-description">Learn more about our journey, mission, and the values that drive us to provide exceptional service.</p>
+          <a href="#learn-more" class="about-cta">Explore Our Story</a>
         </div>
-    
-        <div class="hero-content">
-            <div class="hero-text">
-                <span class="tagline" data-aos="fade-up" data-aos-delay="500" >A Cozy Escape Awaits</span>
-                <h1 class="section-title-icon" data-aos="flip-left" data-aos-easing="ease-out-cubic" data-aos-delay="500" data-aos-duration="2000">
-                  <i class="fa-regular fa-star"></i>
-                  <i class="fa-regular fa-star"></i>
-                  Buffalo Lodge
-                  <i class="fa-regular fa-star"></i>
-                  <i class="fa-regular fa-star"></i>
-                </h1>
-                <p class="subtext" data-aos="fade-down" data-aos-delay="500" >Experience Comfort, Tranquility, and Warm Hospitality.</p>
-                <div class="button-group">
-                    <a href="/contact" class="cta-button" data-aos="fade-up-right" data-aos-delay="500" >Get in Touch</a>
-                    <a href="/about" class="secondary-button" data-aos="fade-up-left" data-aos-delay="500">Learn More</a>
-                </div>
-            </div>
-        </div>  
-        <div class="search-container">
-            <div class="form-wrapper">
-                <!-- First Form (Room Selection & Month) -->
-                <form action="/availability" method="GET" class="tm-booking-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <select name="roomNumber" id="roomNumber" class="form-control" required>
-                                <% rooms.forEach(room => { %>
-                                    <option value="<%= room.roomNumber %>">Room <%= room.roomNumber %> (Capacity: <%= room.capacity %>)</option>
-                                <% }); %>
-                            </select>
-                        </div>
-        
-                        <div class="form-group">
-                            <select name="month" id="month" class="form-control" required>
-                                <% for(let i = 1; i <= 12; i++) { %>
-                                    <option value="<%= i %>"><%= new Date(2025, i - 1, 1).toLocaleString('default', { month: 'long' }) %></option>
-                                <% } %>
-                            </select>
-                            <i class="fas fa-calendar-alt input-icon"></i>
-                        </div>
-        
-                        <input type="hidden" name="year" value="2025">
-                        <button type="submit" class="btn">Room Availability</button>
-                    </div>
-                </form>
-        
-                <!-- Second Form (Check-in & Check-out) -->
-                <form action="/search-rooms" method="get" class="tm-booking-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <input type="text" class="form-control datefield" name="checkInDate" id="inputCheckIn" placeholder="Check In" readonly>
-                            <i class="fas fa-calendar-alt input-icon"></i>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control datefield" name="checkOutDate" id="inputCheckOut" placeholder="Check Out" readonly>
-                            <i class="fas fa-calendar-alt input-icon"></i>
-                        </div>
-        
-                        <button type="submit" class="btn">Check Availability</button>
-                    </div>
-                </form>    
-            </div>
-        </div>     
-    </section>
-    <div class="next-section"></div>
+      </section>
 
-    <div class="container-xxl py-5 mt-5">
-        <div class="container">
-          <div class="row g-5">
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-              <div class="d-flex flex-column position-relative">
-                <img class="img-fluid rounded w-75 align-self-end f-image" src="/images/hero-1.jpg" alt="Guesthouse image">
-                <img class="img-fluid rounded w-50 pt-3 pe-3 s-image" src="/images/hero-1.jpg" alt="Guesthouse image" style="position: absolute; top: 55%; left: 10%; margin-top:-25%;">
+       <!-- About Page -->
+<section id="about-us" class="about-us-section px-4 pb-5">
+  <div class="container">
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <h2>Why Stay With Us?</h2>
+        <p>
+          Golden Fields offers the perfect blend of comfort and convenience, with personalized service, stunning views, and a relaxing environment. Here’s why guests choose us:
+        </p>
+        <div class="accordion" id="why-stay">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Peaceful & Scenic Location
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#why-stay">
+              <div class="accordion-body">
+                Our guest house is located in the heart of nature, offering a tranquil escape from the hustle and bustle of everyday life. Wake up to the sounds of birds chirping and enjoy scenic views right from your room.
               </div>
             </div>
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500">
-              <h2 class="mb-4 text-black">Welcome to 
-                <span class="section-title welcome-title">Buffalo Lodge</span></h1>
-              <p class="mb-4 fs-5 text-muted">At our guesthouse, we strive to provide a comfortable and memorable experience for all our guests. From cozy rooms to top-notch amenities, we ensure that your stay is special.</p>
-              <p class="mb-4 fs-5 text-muted">We offer affordable accommodation, excellent service, and a variety of facilities to meet all your needs during your stay. Whether you're here for a relaxing vacation or a business trip, we have everything you need.</p>
-              <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="/about">Read More</a>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Affordable Luxury
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#why-stay">
+              <div class="accordion-body">
+                Our rates are designed to provide luxurious accommodations at affordable prices. We believe in offering value for money while maintaining high standards of service and comfort.
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Family-Friendly & Safe
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#why-stay">
+              <div class="accordion-body">
+                Our guest house is perfect for families, offering spacious rooms and facilities designed with families in mind. We also prioritize safety and security, ensuring peace of mind for you and your loved ones.
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <section class="amenities-section py-5 position-relative">
+      <div class="col-md-6">
+        <h2>Room Pricing</h2>
+        <p>We offer competitive pricing for our various room types. Below are our room rates:</p>
+        <ul>
+          <li>Standard Room: <strong>$99/night</strong></li>
+          <li>Deluxe Room: <strong>$149/night</strong></li>
+          <li>Family Suite: <strong>$199/night</strong></li>
+        </ul>
+        <button class="btn btn-primary mt-4" data-bs-toggle="collapse" data-bs-target="#pricingDetails" aria-expanded="false" aria-controls="pricingDetails">
+          View More Pricing Details
+        </button>
+        <div class="collapse mt-3" id="pricingDetails">
+          <ul>
+            <li>Special discounts available for extended stays.</li>
+            <li>Prices include complimentary breakfast.</li>
+            <li>Discounts for group bookings and events.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+</section>
+
+<!-- Interactive Section with Toggles -->
+<section class="values-section">
+  <div class="container px-4 py-5">
+    <div class="interactive-section">
+      <h2>Why Stay With Us?</h2>
+      <div class="interactive-toggle">
+        <div class="toggle-header">
+          Unmatched Comfort <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="toggle-body">
+          <p>
+            We provide rooms that are designed with ultimate comfort in
+            mind, ensuring you a restful stay. From soft bedding to peaceful
+            surroundings, comfort is guaranteed.
+          </p>
+        </div>
+      </div>
+      <div class="interactive-toggle">
+        <div class="toggle-header">
+          Convenient Location <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="toggle-body">
+          <p>
+            Our guesthouse is centrally located, close to attractions,
+            shops, and dining options. You’ll never be far from what you
+            need.
+          </p>
+        </div>
+      </div>
+      <div class="interactive-toggle">
+        <div class="toggle-header">
+          Exceptional Service <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="toggle-body">
+          <p>
+            Our team is dedicated to ensuring your stay is flawless. With
+            personalized services and attention to detail, we strive to
+            exceed your expectations.
+          </p>
+        </div>
+      </div>
+      <div class="interactive-toggle">
+        <div class="toggle-header">
+          Relaxing Atmosphere <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="toggle-body">
+          <p>
+            Enjoy the serene surroundings, peaceful gardens, and
+            breathtaking views. Our guesthouse is a sanctuary where you can
+            truly relax and recharge.
+          </p>
+        </div>
+      </div>
+      <div class="interactive-toggle">
+        <div class="toggle-header">
+          Eco-Friendly Practices <i class="fas fa-angle-down"></i>
+        </div>
+        <div class="toggle-body">
+          <p>
+            We are committed to sustainable practices. From energy-efficient
+            lighting to water conservation, we make every effort to reduce
+            our environmental impact.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+    
+      <section class="amenities-section py-5 positi">
         <div class="dim-bg-color"></div>
         <div class="container">
           <h2 class="text-center mb-5 fw-bold section-title z-3">Amenities</h2>
@@ -820,32 +583,73 @@ button.btn:hover {
 
 
       <section class="room-gallery position-relative">
-        <div class="container pb-5">
-            <h2 class="section-title text-black">Our Rooms</h2>
-            <div class="room-display-container mt-5">
-                <% rooms.forEach(room => { %>
-                    <div class="room-display-block">
-                        <div class="room-image-gallery">
-                            <div class="carousel">
-                                <div class="carousel-images">
-                                    <% room.images.forEach(image => { %>
-                                        <img src="<%= image %>" alt="Room Image" class="carousel-image" />
-                                    <% }) %>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="room-details">
-                            <h3 class="room-number">Room <%= room.roomNumber %></h3>
-                            <p class="room-type"><%= room.type %></p>
-                            <p class="room-description"><%= room.description %></p>
-                            <p class="capacity">Max Occupancy: <%= room.capacity %> Guests</p>
-                            <p class="price">R<%= room.price %> per night</p>
-                            <a href="/room-details/<%= room.id %>" class="cta-button">Book Now</a>
-                        </div>
-                    </div>
-                <% }) %>
+       <div class="container pb-5">
+        <h2 class="section-title text-black">Our Room </h2>
+        <div class="room-display-container mt-5">
+          <!-- Room Display Block 1 -->
+          <div class="room-display-block">
+            <div class="room-image-gallery">
+              <div class="carousel">
+                <div class="carousel-images">
+                  <img src="/images/hero-2.jpg" alt="Room Image 1" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 2" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 3" class="carousel-image" />
+                </div>
+              </div>
             </div>
+            <div class="room-details">
+              <h3 class="room-number">Room 101</h3>
+              <p class="room-type">Deluxe Suite</p>
+              <p class="room-description">A spacious suite with luxurious amenities and a stunning view.</p>
+              <p class="capacity">Max Occupancy: 4 Guests</p>
+              <p class="price">$250 per night</p>
+              <a href="/room-details/101" class="cta-button">Book Now</a>
+            </div>
+          </div>
+          
+          <!-- Room Display Block 2 -->
+          <div class="room-display-block">
+            <div class="room-image-gallery">
+              <div class="carousel">
+                <div class="carousel-images">
+                  <img src="/images/hero-2.jpg" alt="Room Image 1" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 2" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 3" class="carousel-image" />
+                </div>
+              </div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-number">Room 102</h3>
+              <p class="room-type">Luxury Room</p>
+              <p class="room-description">A cozy room with modern amenities for a comfortable stay.</p>
+              <p class="capacity">Max Occupancy: 2 Guests</p>
+              <p class="price">$180 per night</p>
+              <a href="/room-details/102" class="cta-button">Book Now</a>
+            </div>
+          </div>
+          
+          <!-- Room Display Block 3 -->
+          <div class="room-display-block">
+            <div class="room-image-gallery">
+              <div class="carousel">
+                <div class="carousel-images">
+                  <img src="/images/hero-2.jpg" alt="Room Image 1" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 2" class="carousel-image" />
+                  <img src="/images/hero-2.jpg" alt="Room Image 3" class="carousel-image" />
+                </div>
+              </div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-number">Room 103</h3>
+              <p class="room-type">Standard Room</p>
+              <p class="room-description">An affordable room perfect for a quick getaway.</p>
+              <p class="capacity">Max Occupancy: 2 Guests</p>
+              <p class="price">$120 per night</p>
+              <a href="/room-details/103" class="cta-button">Book Now</a>
+            </div>
+          </div>
         </div>
+       </div>
        <svg preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000.4 78.7"><g fill="%23000000"><path d="M0 59V0h2000v61c-11-1-22-6-32-13-10-6-19-14-30-20a90 90 0 00-91 4c-10 6-18 15-28 21a80 80 0 01-68 8 80 80 0 01-68-8c-10-6-19-15-29-21a90 90 0 00-91-4l-29 20c-10 6-22 12-34 13a33 33 0 01-4-1v1c-12-1-23-6-32-13l-30-20a90 90 0 00-91 4c-10 6-18 15-28 21a80 80 0 01-69 8 80 80 0 01-68-8c-10-6-18-15-28-21a90 90 0 00-91-4c-11 6-20 14-30 20s-21 12-33 13a33 33 0 01-4-1v1c-12-1-23-6-33-13l-29-20a90 90 0 00-92 4c-9 6-18 15-28 21a80 80 0 01-68 8 80 80 0 01-68-8c-10-6-18-15-28-21a89 89 0 00-91-4c-11 6-20 14-30 20l-6 4c-8 5-17 8-27 9a33 33 0 01-5-1v1c-11-1-22-6-32-13-10-6-19-14-30-20l-3-1a87 87 0 00-35-10 90 90 0 00-43 9 81 81 0 00-10 6l-8 6-20 15a80 80 0 01-68 8 80 80 0 01-68-8l-20-15-8-6a82 82 0 00-11-6 90 90 0 00-44-8 87 87 0 00-35 9l-2 1-29 20A79 79 0 010 59z" opacity=".75"></path><path d="M1523 0h454a33 33 0 01-16 20h-2a33 33 0 01-22 2 22 22 0 01-16 15 15 15 0 01-6 5 22 22 0 01-13 3 52 52 0 01-14-4l-11-5-35-17a75 75 0 00-51-2 157 157 0 00-41 27 151 151 0 00-46-28c-15-4-31-2-45 3-13 5-24 11-36 17l-11 5a52 52 0 01-13 4 22 22 0 01-14-3 15 15 0 01-6-5 22 22 0 01-16-15 33 33 0 01-22-2h-1a33 33 0 01-17-20z" opacity=".5"></path><path d="M1496 0h504v13c-6 11-20 16-31 12a37 37 0 01-10-5c-7-5-14-13-24-15-12-3-24 4-34 12-8 6-15 14-24 19a43 43 0 01-7 3c-14 4-29 1-42-5-11-5-21-12-32-18l-5-3c-13-6-27-10-41-7-14-3-28 1-41 7l-5 3c-11 6-21 13-32 18-13 6-28 9-42 5a43 43 0 01-7-4c-9-4-16-12-24-18-10-8-22-15-34-12-10 2-17 10-24 15a37 37 0 01-10 5c-14 5-31-4-34-19l-1-6z"></path><circle cx="1940.6" cy="49.4" r="8.5"></circle><circle cx="1841.1" cy="46.1" r="5.2"></circle><circle cx="1624.5" cy="46.1" r="5.2"></circle><circle cx="1564.4" cy="42" r="7.3"></circle><circle cx="1894" cy="72.9" r="5.8" opacity=".5"></circle><circle cx="1679.1" cy="72.9" r="5.8" opacity=".5"></circle><circle cx="1750" cy="72.9" r="2.8" opacity=".75"></circle><path d="M1019 0h454a33 33 0 01-17 20h-1a33 33 0 01-22 2 22 22 0 01-17 15 15 15 0 01-5 5 22 22 0 01-14 3 52 52 0 01-13-4l-11-5-36-17a75 75 0 00-50-2 157 157 0 00-41 27 151 151 0 00-46-28c-15-4-31-2-46 3l-35 17-11 5a52 52 0 01-14 4 22 22 0 01-13-3 15 15 0 01-6-5 22 22 0 01-17-15 33 33 0 01-22-2h-1a33 33 0 01-16-20z" opacity=".5"></path><path d="M992 0h504v13c-6 11-20 16-32 12a37 37 0 01-9-5c-8-5-15-13-24-15-12-3-25 4-35 12-7 6-15 14-23 19a43 43 0 01-7 3c-14 4-29 1-42-5-11-5-21-12-32-18l-5-3c-13-6-27-10-41-7-14-3-29 1-41 7l-5 3c-11 6-21 13-33 18-13 6-28 9-41 5a43 43 0 01-7-4c-9-4-16-12-24-18-10-8-22-15-35-12-9 2-16 10-24 15a37 37 0 01-9 5c-14 5-31-4-34-19l-1-6z"></path><circle cx="1436.3" cy="49.4" r="8.5"></circle><circle cx="1336.8" cy="46.1" r="5.2"></circle><circle cx="1120.3" cy="46.1" r="5.2"></circle><circle cx="1060.2" cy="42" r="7.3"></circle><circle cx="1389.7" cy="72.9" r="5.8" opacity=".5"></circle><circle cx="1174.8" cy="72.9" r="5.8" opacity=".5"></circle><circle cx="1245.7" cy="72.9" r="2.8" opacity=".75"></circle><path d="M514 0h455a33 33 0 01-17 20h-1a33 33 0 01-22 2 22 22 0 01-17 15 15 15 0 01-6 5 22 22 0 01-13 3 52 52 0 01-13-4l-12-5-35-17a75 75 0 00-50-2 157 157 0 00-41 27 150 150 0 00-46-28c-15-4-31-2-46 3l-36 16-11 5a52 52 0 01-13 4 22 22 0 01-14-2 15 15 0 01-5-5 22 22 0 01-17-15 33 33 0 01-22-2h-1a33 33 0 01-17-20z" opacity=".5"></path><path d="M488 0h504v13c-6 11-20 16-32 12a37 37 0 01-9-5c-8-5-15-13-24-15-12-3-25 4-35 12-8 6-15 14-24 18a43 43 0 01-7 4c-13 4-28 1-41-5l-33-18-4-3c-13-6-28-10-42-7-13-3-28 1-41 7l-4 3-33 18c-13 6-28 9-41 5a43 43 0 01-8-4c-8-4-16-12-23-18-10-8-23-15-35-12-9 2-16 10-24 15a37 37 0 01-9 5c-14 5-31-4-35-19V0z"></path><circle cx="932" cy="49.4" r="8.5"></circle><circle cx="832.6" cy="46.1" r="5.2"></circle><circle cx="616" cy="46.1" r="5.2"></circle><circle cx="555.9" cy="42" r="7.3"></circle><circle cx="885.4" cy="72.9" r="5.8" opacity=".5"></circle><circle cx="670.6" cy="72.9" r="5.8" opacity=".5"></circle><circle cx="741.4" cy="72.9" r="2.8" opacity=".75"></circle><path d="M10 0h454a33 33 0 01-16 20h-2a33 33 0 01-21 2 22 22 0 01-17 15 15 15 0 01-6 5 22 22 0 01-13 3 52 52 0 01-14-4l-11-5-35-17a75 75 0 00-50-2 157 157 0 00-41 27 150 150 0 00-47-28c-14-4-31-2-45 3l-36 16-11 5a52 52 0 01-13 4 22 22 0 01-14-2 15 15 0 01-5-5 22 22 0 01-17-15 33 33 0 01-22-2h-1A33 33 0 0110 0z" opacity=".5"></path><path d="M0 24V0h488v13c-7 11-20 16-32 12a37 37 0 01-10-5c-7-5-14-13-23-15-13-3-25 4-35 12h-1c-7 7-14 14-23 18a43 43 0 01-7 4c-10 3-21 2-31-1a84 84 0 01-10-4c-12-5-22-12-33-18l-5-3c-12-6-27-10-41-7-14-3-28 1-41 7l-5 3c-11 6-21 13-32 18a83 83 0 01-9 4c-11 3-22 4-33 1a43 43 0 01-7-4c-8-4-15-11-23-18h-1C77 9 64 2 52 5c-9 2-16 10-24 15a37 37 0 01-10 5 26 26 0 01-18-1z"></path><circle cx="427.8" cy="49.4" r="8.5"></circle><circle cx="328.3" cy="46.1" r="5.2"></circle><circle cx="111.7" cy="46.1" r="5.2"></circle><circle cx="51.6" cy="42" r="7.3"></circle><circle cx="381.1" cy="72.9" r="5.8" opacity=".5"></circle><circle cx="166.3" cy="72.9" r="5.8" opacity=".5"></circle><circle cx="237.2" cy="72.9" r="2.8" opacity=".75"></circle></g></svg>
       </section>
 

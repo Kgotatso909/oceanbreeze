@@ -20,6 +20,18 @@ const roomSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    roomType: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    images: [{
+        type: String, // Store image paths
+        required: true,
+    }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('Room', roomSchema);
