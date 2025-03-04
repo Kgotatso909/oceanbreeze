@@ -1,217 +1,89 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Available Rooms</title>
     <style nonce="<%= nonce %>">
-        /* Reset Default Margin and Padding */
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
-  line-height: 1.6;
-}
-
-.section-title {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 1.5rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  position: relative;
-}
-
-.section-title::after {
-  content: '';
-  display: block;
-  width: 50px;
-  height: 3px;
-  background-color: #ff6600;
-  margin: 0.8rem auto;
-  border-radius: 2px;
-}
 
 .date-info {
-  text-align: center;
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-  color: #666;
-}
-
-.room-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    color: #666;
+    text-align: center;
 }
 
 .room-card {
-  width: 100%;
-  max-width: 350px;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  background-color: #fff;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
 }
-
 .room-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
-
-.room-image-gallery {
-  width: 100%;
-  height: 220px;
-  position: relative;
-  overflow: hidden;
-  border-bottom: 2px solid #f0f0f0;
+.room-image {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
 }
-
-.carousel {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.carousel-images {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
-
-.carousel-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-}
-
-.carousel-image.active {
-  opacity: 1;
-}
-
-.room-details {
-  padding: 1.5rem;
-  text-align: center;
-}
-
-.room-number {
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #222;
-  margin-bottom: 0.5rem;
-}
-
-.room-type {
-  font-size: 1.1rem;
-  color: #555;
-  margin-bottom: 0.5rem;
-}
-
 .price {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #ff6600;
-  margin-bottom: 1.5rem;
-}
-
-.cta-button {
-  padding: 0.8rem 1.5rem;
-  background-color: #ff6600;
-  color: #fff;
-  font-weight: bold;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  display: inline-block;
-}
-
-.cta-button:hover {
-  background-color: #e65c00;
-  transform: scale(1.05);
-}
-
-.cta-button:active {
-  transform: scale(1);
-}
-
-.no-rooms-message {
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #555;
-  margin-top: 2rem;
-}
-
-@media (min-width: 1024px) {
-  .room-card {
-    width: 48%;
-  }
-}
-
-@media (max-width: 768px) {
-  .room-card {
-    width: 100%;
-  }
-
-  .room-image-gallery {
-    height: 180px;
-  }
-
-  .room-details {
-    padding: 1rem;
-  }
+    color: #28a745;
+    font-size: 1.2rem;
 }
 
     </style>
 </head>
 <body>
-    <h2 class="section-title">Available Rooms</h2>
 
+  <div class="container mt-5">
+    <h2 class="section-title text-black">Available Rooms</h2>
     <p class="date-info">Check-in: <%= checkInDate %> | Check-out: <%= checkOutDate %></p>
-    
-    <div class="room-list">
-        <% if (availableRooms.length > 0) { %>
-            <% availableRooms.forEach(room => { %>
-                <div class="room-card">
-                    <div class="room-image-gallery">
-                        <div class="carousel">
-                          
-                        </div>
-                    </div>
-                    <div class="room-details">
-                        <h3 class="room-number">Room <%= room.roomNumber %></h3>
-                        <p class="room-type">Capacity: <%= room.capacity %> guests</p>
-                        <p class="price">Price: R<%= room.price %> per night</p>
-                        <a href="/book-room?room=<%= room.roomNumber %>&checkIn=<%= checkInDate %>&checkOut=<%= checkOutDate %>" class="cta-button">Book Now</a>
-                    </div>
-                </div>
-            <% }) %>
-        <% } else { %>
-            <p class="no-rooms-message">No rooms available for the selected dates.</p>
-        <% } %>
-    </div>
-    
+    <div class="container mt-5">
+      <div class="row">
+          <% if (availableRooms.length > 0) { %>
+              <% availableRooms.forEach(room => { %>
+                  <div class="col-md-6 col-lg-4 mb-4">
+                      <div class="card shadow-sm border-0 room-card">
+                          <div id="carousel<%= room.roomNumber %>" class="carousel slide" data-bs-ride="carousel">
+                              <div class="carousel-inner">
+                                  <% room.images.forEach((image, index) => { %>
+                                      <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                          <img src="<%= image %>" class="d-block w-100 room-image" alt="Room Image">
+                                      </div>
+                                  <% }) %>
+                              </div>
+                              <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%= room.roomNumber %>" data-bs-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              </button>
+                              <button class="carousel-control-next" type="button" data-bs-target="#carousel<%= room.roomNumber %>" data-bs-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              </button>
+                          </div>
+                          <div class="card-body">
+                              <h5 class="card-title">Room <%= room.roomNumber %></h5>
+                              <p class="card-text"><i class="bi bi-people-fill"></i> Capacity: <%= room.capacity %> guests</p>
+                              <p class="card-text price"><strong>R<%= room.price %></strong> per night</p>
+                              <a href="/book-room?room=<%= room.roomNumber %>&checkIn=<%= checkInDate %>&checkOut=<%= checkOutDate %>" class="btn btn-primary w-100">Book Now</a>
+                          </div>
+                      </div>
+                  </div>
+              <% }) %>
+          <% } else { %>
+              <div class="col-12">
+                  <p class="alert alert-warning text-center">No rooms available for the selected dates.</p>
+              </div>
+          <% } %>
+      </div>
+  </div>
+  <a href="/" class="btn btn-primary">Go Back to Home</a>
+  </div>
 
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
 </body>
 </html>

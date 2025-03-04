@@ -6,4 +6,6 @@ router.get('/', homeController.showHomePage);
 
 router.get('/about', homeController.showAboutPage);
 
+router.get('/gallery', homeController.showGalleryPage);
+
 module.exports = router;
