@@ -7,10 +7,11 @@ const PDFDocument = require('pdfkit');
 const Booking = require('../models/booking');
 const roomController = require('../controllers/roomController');
 const bookingController = require('../controllers/bookingController');
+const contactController = require('../controllers/contactController');
 const newsletterController = require('../controllers/newsletterController');
 const emailController = require('../controllers/emailController');
 const upload = require('../middlewares/upload');
-const { getAdminDashboard, getFilteredBookings, batchProcessBookings, sendBulkEmailNotifications } = require('../controllers/adminController');
+const adminController = require('../controllers/adminController');
 
 // Manage bookings (list)
 router.get('/manage-bookings', protectRoute, bookingController.manageBookings);
@@ -39,14 +40,14 @@ router.post('/editRoom/:id', protectRoute, roomController.updateRoom);
 router.post('/deleteRoom/:id', protectRoute, roomController.deleteRoom);
 
 // Admin Dashboard Route
-router.get('/dashboard', protectRoute, getAdminDashboard);
+router.get('/dashboard', protectRoute, adminController.getAdminDashboard);
 
-router.get('/bookings/filter', getFilteredBookings);
+router.get('/bookings/filter', adminController.getFilteredBookings);
 
-router.post('/bookings/batch-process', batchProcessBookings);
+router.post('/bookings/batch-process', adminController.batchProcessBookings);
 
 // Bulk email notification route
-router.post('/bookings/send-notifications', sendBulkEmailNotifications);
+router.post('/bookings/send-notifications', adminController.sendBulkEmailNotifications);
 
 router.post('/subscribe', newsletterController.subscribe);
 router.post('/send-newsletter', newsletterController.sendNewsletter);
@@ -65,5 +66,11 @@ router.get('/send-email', (req, res) => {
 
 // Handle email sending
 router.post('/send-email', emailController.sendEmail);
+
+// Route to view messages (with optional filter)
+router.get('/messages', contactController.getMessages);
+
+// Route to update message status
+router.post('/messages/reply', contactController.markAsReplied);
 
 module.exports = router;

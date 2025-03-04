@@ -1,0 +1,43 @@
+<h2>Manage Messages</h2>
+
+<!-- Filter Dropdown -->
+<form action="/admin/messages" method="GET">
+    <label for="filter">Filter by status:</label>
+    <select name="filter" id="filter" onchange="this.form.submit()">
+        <option value="">All</option>
+        <option value="pending" <%= filter === 'pending' ? 'selected' : '' %>>Pending</option>
+        <option value="replied" <%= filter === 'replied' ? 'selected' : '' %>>Replied</option>
+    </select>
+</form>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Subject</th>
+            <th>Message</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% messages.forEach(message => { %>
+        <tr>
+            <td><%= message.username %></td>
+            <td><%= message.email %></td>
+            <td><%= message.subject %></td>
+            <td><%= message.message %></td>
+            <td><%= message.respond %></td>
+            <td>
+                <% if (message.respond === 'pending') { %>
+                    <form action="/admin/messages/reply" method="POST">
+                        <input type="hidden" name="messageId" value="<%= message._id %>">
+                        <button type="submit">Mark as Replied</button>
+                    </form>
+                <% } %>
+            </td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>

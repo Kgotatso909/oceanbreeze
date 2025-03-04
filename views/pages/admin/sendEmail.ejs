@@ -44,7 +44,7 @@
         <button type="submit">Send Email</button>
     </form>
 
-    <script>
+    <script nonce="<%= nonce %>">
         document.querySelector('select[name="template"]').addEventListener('change', function() {
             document.getElementById('promoFields').style.display = this.value === 'promotion' ? 'block' : 'none';
         });

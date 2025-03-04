@@ -1,11 +1,12 @@
 // /controllers/adminController.js
 const Booking = require('../models/booking');
+const Contact = require('../models/contact');
 const Room = require('../models/room');
 const Revenue = require('../models/revenue');
 const AuditLog = require('../models/auditLog');
 
 
-const batchProcessBookings = async (req, res) => {
+exports.batchProcessBookings = async (req, res) => {
     try {
         const { bookingIds, action, status } = req.body;
 
@@ -43,7 +44,7 @@ const batchProcessBookings = async (req, res) => {
 
 
 
-const getFilteredBookings = async (req, res) => {
+exports.getFilteredBookings = async (req, res) => {
     try {
         const { startDate, endDate, guestName, roomType } = req.query;
         const filters = {};
@@ -70,7 +71,7 @@ const getFilteredBookings = async (req, res) => {
 };
 
 // Admin Dashboard: Overview with key metrics
-const getAdminDashboard = async (req, res) => {
+exports.getAdminDashboard = async (req, res) => {
     try {
         // Count total bookings
         const totalBookings = await Booking.countDocuments();
@@ -79,18 +80,21 @@ const getAdminDashboard = async (req, res) => {
         const revenueRecord = await Revenue.findOne();
         const totalRevenue = revenueRecord ? revenueRecord.totalRevenue : 0;
 
-        // Count available rooms (rooms that are not fully booked with approved bookings)
-        // const bookedRoomNumbers = await Booking.distinct("roomNumber", { status: "approved" });
-        // const availableRooms = await Room.countDocuments({ roomNumber: { $nin: bookedRoomNumbers } });
+        // Count available rooms
         const availableRooms = await Room.countDocuments({ available: true });
+
         // Fetch pending bookings for approval
         const bookings = await Booking.find({ status: "pending" }).populate("guest");
+
+        // Count new (unreplied) messages
+        const newMessagesCount = await Contact.countDocuments({ respond: "pending" });
 
         res.render('pages/admin/dashboard', {
             totalBookings,
             totalRevenue,
             availableRooms,
-            bookings
+            bookings,
+            newMessagesCount // Pass new messages count to the view
         });
     } catch (error) {
         console.error(error);
@@ -98,7 +102,7 @@ const getAdminDashboard = async (req, res) => {
     }
 };
 
-const sendBulkEmailNotifications = async (req, res) => {
+exports.sendBulkEmailNotifications = async (req, res) => {
     try {
         const { bookingIds, action } = req.body;
         
@@ -141,5 +145,3 @@ const sendBulkEmailNotifications = async (req, res) => {
     }
 };
 
-
-module.exports = { getAdminDashboard, getFilteredBookings, batchProcessBookings, sendBulkEmailNotifications };

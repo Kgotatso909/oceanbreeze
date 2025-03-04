@@ -14,6 +14,7 @@ const homeRoutes = require('./routes/index');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 const roomRoutes = require('./routes/roomRoutes');
 
 dotenv.config();
@@ -39,17 +40,17 @@ app.use('/', roomRoutes);
 app.use('/', homeRoutes);
 app.use('/auth', authRoutes);
 app.use("/admin", adminRoutes)
-app.use("/booking", bookingRoutes)  // This line maps to all booking-related routes
+app.use("/booking", bookingRoutes)
+app.use('/', contactRoutes);
 
 // Route for GET request to render the booking page (form)
 app.get('/booking', (req, res) => {
     res.render('pages/booking');  // Renders booking.ejs
 });
+
 app.get('/test', (req, res) => {
     res.render('pages/test');  // Renders booking.ejs
 });
-
-
 
 // Apply error handling middleware (last middleware)
 app.use(errorMiddleware);
