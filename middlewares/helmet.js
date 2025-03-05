@@ -32,9 +32,11 @@ const setSecurityHeaders = () => {
                     imgSrc: ["'self'", 'data:'], // Allow images from the same origin and inline images
                     connectSrc: ["'self'"], // Allow XMLHttpRequest (AJAX) from the same origin
                     fontSrc: [
-                        "'self'", 
+                       "'self'",  // Allow system fonts (built-in fonts from the local device)
                         'https://cdnjs.cloudflare.com', // Allow fonts from CDN
                         'https://cdn.jsdelivr.net', // Allow fonts from jsDelivr CDN
+                         'data:',  // Allow base64-encoded fonts (data URIs)
+                        `'nonce-${nonce}'`
                     ],
                     objectSrc: ["'none'"], // Disallow <object> elements
                     upgradeInsecureRequests: [] // Automatically upgrade HTTP requests to HTTPS

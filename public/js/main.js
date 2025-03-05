@@ -115,33 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
               setInterval(showNextImage, 3000);
             });    
 
-              // Set the default tab to "mission"
-  showTab('mission');
-
-  // Add event listeners to tab buttons
-  const buttons = document.querySelectorAll('.tab-button');
-  buttons.forEach(button => {
-    button.addEventListener('click', function () {
-      const tabId = button.getAttribute('data-tab');
-      showTab(tabId);
-    });
-  });
+  
 });
 
-function showTab(tabId) {
-    // Hide all tab content
-    const contents = document.querySelectorAll('.tab-content');
-    contents.forEach(content => {
-      content.style.display = 'none';
-    });
-  
-    // Remove the active class from all buttons
-    const buttons = document.querySelectorAll('.tab-button');
-    buttons.forEach(button => {
-      button.classList.remove('active');
-    });
-  
-    // Show the selected tab and add active class to the clicked button
-    document.getElementById(tabId).style.display = 'block';
-    document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-  }

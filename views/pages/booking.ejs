@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"  />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css" />
     <link rel="stylesheet" href="css/styles.css">
     <style  nonce="<%= nonce %>">
@@ -573,8 +574,8 @@ html, body {
     <%- include("../partials/_nav.ejs") %>
     <section class="contact-hero">
         <div class="contact-hero-content">
-          <h1 class="contact-title">Your Adventure Starts Here</h1>
-          <p class="contact-description">Secure your reservations in minutes and start planning your adventure today.</p>
+          <h1 class="contact-title">Book Your Stay</h1>
+          <p class="contact-description">Secure your reservations in minutes.</p>
           <a href="/booking" class="contact-cta">Book Now</a>
         </div>
       </section>
@@ -596,6 +597,7 @@ html, body {
                     </div>
                 
                     <div class="form-group">
+                    
                         <input type="text" class="form-control datefield" name="checkInDate" id="inputCheckIn" placeholder="Check In" readonly>
                         <i class="fas fa-calendar-alt input-icon"></i>
                         <input type="text" class="form-control datefield" name="checkOutDate" id="inputCheckOut" placeholder="Check Out" readonly>
@@ -620,20 +622,26 @@ html, body {
 
             <!-- Contact Details -->
             <div class="contact-details">
-                <h2>Contact Information</h2>
-
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>Email: support@bookingapp.com</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-phone-alt"></i>
-                    <span>Phone: +123 456 7890</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Address: 123 booking St, City, Country</span>
-                </div>
+                <div class="search-container">
+                    <h2 class="text-primary">Check Availability</h2>
+                    <div class="form-wrapper">
+                        <!-- Second Form (Check-in & Check-out) -->
+                        <form action="/search-rooms" method="get" class="tm-booking-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" class="form-control datefield" name="checkInDate" id="inputCheckIn" placeholder="Check In" readonly>
+                                    <i class="fas fa-calendar-alt input-icon"></i>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control datefield" name="checkOutDate" id="inputCheckOut" placeholder="Check Out" readonly>
+                                    <i class="fas fa-calendar-alt input-icon"></i>
+                                </div>
+                
+                                <button type="submit" class="btn btn-submit">Check Availability</button>
+                            </div>
+                        </form>    
+                    </div>
+                </div>     
             </div>
         </div>
     </div>
