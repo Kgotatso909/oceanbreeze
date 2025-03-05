@@ -39,7 +39,7 @@
                                 </span>
                             </td>
                             <td>
-                                <% if (booking.status === 'pending' || booking.status === 'approved') { %>
+                                <% if (booking.status === 'pending' || booking.status === 'approved' || booking.status === 'checked-in') { %>
                                     <a href="/admin/update-booking/<%= booking._id %>" class="btn btn-primary btn-sm">Update</a>
                                 <% } %>
                             </td>

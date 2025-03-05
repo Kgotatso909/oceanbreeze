@@ -2,12 +2,14 @@ const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const cron = require('node-cron');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const protectRoute = require('./middlewares/authMiddleware');
-const setSecurityHeaders = require('./middlewares/helmet'); // Import custom helmet middleware
-const errorMiddleware = require('./middlewares/errorMiddleware'); // Import error middleware
-const connectDB = require('./config/database'); // Import DB connection
+const setSecurityHeaders = require('./middlewares/helmet'); 
+const errorMiddleware = require('./middlewares/errorMiddleware'); 
+const bookingController = require('./controllers/bookingController');
+const connectDB = require('./config/database'); 
+
 
 // Import routes for registration and login
 const homeRoutes = require('./routes/index');
@@ -43,13 +45,11 @@ app.use("/admin", adminRoutes)
 app.use("/booking", bookingRoutes)
 app.use('/', contactRoutes);
 
-// Route for GET request to render the booking page (form)
-app.get('/booking', (req, res) => {
-    res.render('pages/booking');  // Renders booking.ejs
-});
-
-app.get('/test', (req, res) => {
-    res.render('pages/test');  // Renders booking.ejs
+// Schedule tasks (Runs every day at midnight)
+cron.schedule('0 0 * * *', async () => {
+    console.log('Running scheduled booking reminders...');
+    await bookingController.sendCheckInReminders();
+    await bookingController.sendReviewRequests();
 });
 
 // Apply error handling middleware (last middleware)

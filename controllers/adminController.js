@@ -86,6 +86,9 @@ exports.getAdminDashboard = async (req, res) => {
         // Fetch pending bookings for approval
         const bookings = await Booking.find({ status: "pending" }).populate("guest");
 
+        // Count number checked-in guests 
+        const totalCheckedin = await Booking.countDocuments({ status: 'checked-in' });
+
         // Count new (unreplied) messages
         const newMessagesCount = await Contact.countDocuments({ respond: "pending" });
 
@@ -94,7 +97,8 @@ exports.getAdminDashboard = async (req, res) => {
             totalRevenue,
             availableRooms,
             bookings,
-            newMessagesCount // Pass new messages count to the view
+            newMessagesCount,
+            totalCheckedin
         });
     } catch (error) {
         console.error(error);
@@ -142,6 +146,17 @@ exports.sendBulkEmailNotifications = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error sending bulk email notifications');
+    }
+};
+
+
+exports.getCheckedInCount = async (req, res) => {
+    try {
+        const count = await Booking.countDocuments({ status: 'checked-in' });
+        res.json({ checkedInGuests: count });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
     }
 };
 

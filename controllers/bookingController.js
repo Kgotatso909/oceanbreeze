@@ -1,5 +1,8 @@
+// controllers//bookingController.js
+const moment = require('moment-timezone'); // To handle time zone normalization
 const Booking = require('../models/booking');
 const Guest = require('../models/guest');
+const Room = require('../models/room');  
 const Revenue = require('../models/revenue');
 const { Parser } = require('json2csv');
 const ExcelJS = require('exceljs');
@@ -7,27 +10,44 @@ const pdf = require('html-pdf-node');
 const ejs = require('ejs');
 const path = require('path');
 const fs = require('fs');
-const nodemailer = require('nodemailer');  // For email sending functionality
+const nodemailer = require('nodemailer');  
+require('dotenv').config();
 
-// Helper function for sending email
-const sendEmail = async (email, subject, text) => {
-    let transporter = nodemailer.createTransport({
-        service: 'gmail', // Example
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
 
-    let info = await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: subject,
-        text: text
-    });
+// Configure Nodemailer
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
 
-    return info;
+// Send Email with EJS Template
+const sendEmail = async (recipientEmail, subject, template, data) => {
+    try {
+        // Define the path to the EJS template
+        const templatePath = path.join(__dirname, '../views/emails', `${template}.ejs`);
+
+        // Render the EJS template with the provided data
+        const emailContent = await ejs.renderFile(templatePath, data);
+
+        // Define the mail options
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: recipientEmail,
+            subject: subject,
+            html: emailContent  // Send the rendered HTML as email content
+        };
+
+        // Send the email
+        await transporter.sendMail(mailOptions);
+        console.log(`Email sent to ${recipientEmail} with subject: ${subject}`);
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
 };
+
 
 exports.manageBookings = async (req, res) => {
     try {
@@ -37,6 +57,7 @@ exports.manageBookings = async (req, res) => {
         res.status(500).send(error);
     }
 };
+
 
 exports.updateBooking = async (req, res) => {
     const bookingId = req.params.id;
@@ -49,24 +70,58 @@ exports.updateBooking = async (req, res) => {
             return res.status(404).send('Booking not found');
         }
 
-        // Handle status updates
-        if (booking.status !== 'approved' && status === 'approved') {
-            booking.status = 'approved';
-            await booking.save();
+        switch (status) {
+            case 'approved':
+                if (booking.status === 'pending') {
+                    booking.status = 'approved';
+                    await booking.save();
 
-            await Revenue.addRevenue(booking.roomNumber);
+                    await Revenue.addRevenue(booking.roomNumber);
+                    sendEmail(
+                        booking.guest.email, 
+                        'Booking Approved', 
+                        'bookingApproved', // Template name
+                        { name: booking.guest.name, roomNumber: booking.roomNumber }
+                    );
+                }
+                break;
 
-            // Send approval email
-            sendEmail(booking.guest.email, 'Booking Approved', 'Your booking has been approved.');
-        } else if (status === 'rejected') {
-            booking.status = 'rejected';
-            await booking.save();
+            case 'checked-in':
+                if (booking.status === 'approved') {
+                    booking.status = 'checked-in';
+                    await booking.save();
+                }
+                break;
 
-            // Send rejection email
-            sendEmail(booking.guest.email, 'Booking Rejected', 'Your booking has been rejected.');
-        } else if (['completed', 'cancelled', 'no-show'].includes(status)) {
-            booking.status = status;
-            await booking.save();
+            case 'completed':
+                if (booking.status === 'checked-in') {
+                    booking.status = 'completed';
+                    await booking.save();
+                }
+                break;
+
+            case 'cancelled':
+            case 'no-show':
+                if (['approved', 'checked-in'].includes(booking.status)) {
+                    booking.status = status;
+                    await booking.save();
+                }
+                break;
+
+            case 'rejected':
+                if (booking.status === 'pending') {   
+                    sendEmail(
+                        booking.guest.email, 
+                        'Booking Rejected', 
+                        'bookingRejected', // Template name
+                        { name: booking.guest.name }
+                    );
+                    await Booking.findByIdAndDelete(bookingId);
+                }
+                break;
+
+            default:
+                return res.status(400).send('Invalid status update.');
         }
 
         res.redirect('/admin/manage-bookings');
@@ -75,6 +130,7 @@ exports.updateBooking = async (req, res) => {
         res.status(500).send(error);
     }
 };
+
 
 exports.viewBookings = async (req, res) => {
     const booking = await Booking.findById(req.params.id).populate('guest');
@@ -183,5 +239,149 @@ exports.exportBookingHistoryPDF = async (req, res) => {
     } catch (err) {
         console.error('Error generating PDF:', err);
         res.status(500).send('Error generating PDF');
+    }
+};
+
+
+// Send Check-in Reminder (1 day before check-in)
+exports.sendCheckInReminders = async () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0); // Start of day
+
+    const bookings = await Booking.find({ 
+        checkInDate: tomorrow, 
+        status: 'approved' 
+    }).populate('guest');
+
+    for (let booking of bookings) {
+        await sendEmail(
+            booking.guest.email,
+            'Your Stay is Almost Here!',
+            'checkinReminder',
+            { name: booking.guest.name, checkInDate: booking.checkInDate }
+        );
+    }
+};
+
+// Send Review Request (1 day after check-out)
+exports.sendReviewRequests = async () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0); // Start of day
+
+    const bookings = await Booking.find({ 
+        checkOutDate: yesterday, 
+        status: 'completed' 
+    }).populate('guest');
+
+    for (let booking of bookings) {
+        await sendEmail(
+            booking.guest.email,
+            'Tell Us About Your Stay!',
+            'reviewRequest',
+            { name: booking.guest.name }
+        );
+    }
+};
+
+// Render booking page with available rooms
+exports.renderBookingPage = async (req, res) => {
+    try {
+        const availableRooms = await Room.find({ available: true });
+        res.render('pages/booking', { rooms: availableRooms, message: '', success: false });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error loading booking page');
+    }
+};
+
+
+// Handle booking creation (POST request)
+exports.createBooking = async (req, res) => {
+    try {
+        const { guestName, guestEmail, phoneNumber, numOfGuests, roomNumber, checkInDate, checkOutDate, cancellationPolicy } = req.body;
+
+        // Convert dates to UTC
+        const normalizedCheckInDate = moment.tz(checkInDate, 'UTC').toDate();
+        const normalizedCheckOutDate = moment.tz(checkOutDate, 'UTC').toDate();
+
+        const rooms = await Room.find({ available: true });
+
+        // ❌ Ensure check-out is after check-in
+        if (normalizedCheckOutDate <= normalizedCheckInDate) {
+            return res.render('pages/booking', { 
+                rooms, 
+                message: 'Check-out date must be after check-in date.', 
+                success: false 
+            });
+        }
+
+        // ❌ Validate cancellation policy
+        if (!cancellationPolicy) {
+            return res.render('pages/booking', { 
+                rooms, 
+                message: 'Please select a cancellation policy.', 
+                success: false 
+            });
+        }
+
+        // ❌ Check for overlapping bookings
+        const existingBooking = await Booking.findOne({
+            roomNumber: roomNumber,
+            checkInDate: { $lt: normalizedCheckOutDate }, 
+            checkOutDate: { $gt: normalizedCheckInDate } 
+        });
+
+        if (existingBooking) {
+            return res.render('pages/booking', { 
+                rooms, 
+                message: 'The selected room is already booked for these dates.', 
+                success: false 
+            });
+        }
+
+        // Create guest entry
+        const guest = new Guest({ name: guestName, email: guestEmail, phoneNumber, numOfGuests });
+        await guest.save();
+
+        // Create new booking
+        const newBooking = new Booking({ 
+            roomNumber, 
+            checkInDate: normalizedCheckInDate, 
+            checkOutDate: normalizedCheckOutDate, 
+            cancellationPolicy, 
+            guest: guest._id 
+        });
+
+        await newBooking.save();
+
+        // Send email to client informing them about the pending status
+        const emailSubject = 'Booking Confirmation - Pending Payment';
+        const emailBodyData = {
+            guestName,
+            roomNumber,
+            checkInDate: moment(normalizedCheckInDate).format('YYYY-MM-DD'),
+            checkOutDate: moment(normalizedCheckOutDate).format('YYYY-MM-DD')
+        };
+
+        // Call the sendEmail function
+        await sendEmail(guestEmail, emailSubject, 'bookingPending', emailBodyData);
+
+        res.render('pages/booking', { 
+            rooms, 
+            message: 'Booking created successfully! Your booking is pending approval until payment is made.', 
+            success: true 
+        });
+
+    } catch (error) {
+        console.error(error);
+        const rooms = await Room.find({ available: true });
+
+        res.status(500).render('pages/booking', { 
+            rooms, 
+            message: 'Error creating booking', 
+            success: false 
+        });
     }
 };

@@ -178,7 +178,7 @@ exports.resetPassword = async (req, res) => {
         admin.password = hashedPassword;
         await admin.save();
 
-        res.json({ message: 'Password reset successfully. You can now login with your new password.' });
+       res.render("pages/login")
     } catch (err) {
         res.status(400).json({ message: 'Invalid or expired token' });
     }

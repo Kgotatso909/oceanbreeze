@@ -36,7 +36,7 @@
         <h1 class="mb-4">Admin Dashboard</h1>
         <div class="row">
             <div class="col-md-3">
-                <div class="card text-white bg-primary mb-3">
+                <div class="card text-white text-center bg-primary mb-3">
                     <div class="card-header">Total Bookings</div>
                     <div class="card-body">
                         <h5 class="card-title"><%= totalBookings %></h5>
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card text-white bg-success mb-3">
+                <div class="card text-white text-center bg-success mb-3">
                     <div class="card-header">Total Revenue</div>
                     <div class="card-body">
                         <h5 class="card-title">R<%= totalRevenue %></h5>
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card text-white bg-warning mb-3">
+                <div class="card text-white text-center bg-warning mb-3">
                     <div class="card-header">Available Rooms</div>
                     <div class="card-body">
                         <h5 class="card-title"><%= availableRooms %></h5>
@@ -60,10 +60,18 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card text-white bg-danger mb-3">
+                <div class="card text-white text-center bg-danger mb-3">
                     <div class="card-header">New Messages</div>
                     <div class="card-body">
                         <h5 class="card-title"><%= newMessagesCount %></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-dark text-center mb-3">
+                    <div class="card-header">Checked-in guests</div>
+                    <div class="card-body">
+                        <h5 class="card-title"><%= totalCheckedin %></h5>
                     </div>
                 </div>
             </div>

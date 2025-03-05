@@ -1,0 +1,17 @@
+<!-- views/emails/bookingPending.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Pending Approval</title>
+</head>
+<body>
+    <h1>Booking Pending Approval</h1>
+    <p>Dear <%= guestName %>,</p>
+    <p>Thank you for your booking! Your reservation for room <%= roomNumber %> from <%= checkInDate %> to <%= checkOutDate %> has been received.</p>
+    <p>Please note that your booking is pending approval until payment has been successfully processed. You will receive a confirmation once the payment is made and approved.</p>
+    <p>If you have any questions, please feel free to contact us.</p>
+    <p>Best regards,<br>Your Guesthouse Team</p>
+</body>
+</html>
