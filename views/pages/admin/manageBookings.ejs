@@ -1,38 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Booking</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+     <!-- Side bar  -->
+     <%- include("../../partials/admin/_nav.ejs") %>
 
-<h1>Manage Bookings</h1>
+    <div class="content container mt-4">
+        <h1 class="mb-4">Manage Bookings</h1>
+    
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Room</th>
+                        <th>Guest Name</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% bookings.forEach(booking => { %>
+                        <tr>
+                            <td><%= booking.roomNumber %></td>
+                            <td><%= booking.guest.name %></td>
+                            <td><%= booking.checkInDate.toDateString() %></td>
+                            <td><%= booking.checkOutDate.toDateString() %></td>
+                            <td>
+                                <span class="badge bg-<%= booking.status === 'approved' ? 'success' : booking.status === 'pending' ? 'warning' : 'secondary' %>">
+                                    <%= booking.status %>
+                                </span>
+                            </td>
+                            <td>
+                                <% if (booking.status === 'pending' || booking.status === 'approved') { %>
+                                    <a href="/admin/update-booking/<%= booking._id %>" class="btn btn-primary btn-sm">Update</a>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    
+        <div class="mt-4">
+            <h2>Export Booking History</h2>
+            <a href="/admin/export-booking-history-csv" class="btn btn-success me-2">Download CSV</a>
+            <a href="/admin/export-booking-history-excel" class="btn btn-primary me-2">Download Excel</a>
+            <a href="/admin/export-booking-history-pdf" class="btn btn-danger">Download PDF</a>
+        </div>
+    </div>
+    
+</body>
+</html>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Room</th>
-            <th>Guest Name</th>
-            <th>Check-in</th>
-            <th>Check-out</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% bookings.forEach(booking => { %>
-            <tr>
-                <td><%= booking.roomNumber %></td>
-                <td><%= booking.guest.name %></td>
-                <td><%= booking.checkInDate.toDateString() %></td>
-                <td><%= booking.checkOutDate.toDateString() %></td>
-                <td><%= booking.status %></td>
-                <td>
-                    <% if (booking.status === 'pending' || booking.status === 'approved') { %>
-                        <a href="/admin/update-booking/<%= booking._id %>">Update</a>
-                    <% } %>
-                </td>
-            </tr>
-        <% }) %>
-    </tbody>
-</table>
 
-
-<div>
-    <h2>Export Booking History</h2>
-    <a href="/admin/export-booking-history" class="btn btn-success">Download CSV</a>
-    <a href="/admin/export-booking-history-pdf" class="btn btn-danger">Download PDF</a>
-</div>

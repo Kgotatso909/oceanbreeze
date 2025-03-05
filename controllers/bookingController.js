@@ -2,7 +2,11 @@ const Booking = require('../models/booking');
 const Guest = require('../models/guest');
 const Revenue = require('../models/revenue');
 const { Parser } = require('json2csv');
-const PDFDocument = require('pdfkit');
+const ExcelJS = require('exceljs');
+const pdf = require('html-pdf-node');
+const ejs = require('ejs');
+const path = require('path');
+const fs = require('fs');
 const nodemailer = require('nodemailer');  // For email sending functionality
 
 // Helper function for sending email
@@ -98,50 +102,86 @@ exports.exportBookingHistoryCSV = async (req, res) => {
     }
 };
 
-// Export Booking History as PDF
+exports.exportBookingHistoryExcel = async (req, res) => {
+    try {
+        const bookings = await Booking.find().populate('guest');
+        
+        // Create a new Excel workbook and worksheet
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Booking History');
+
+        // Define column headers and styles
+        worksheet.columns = [
+            { header: 'Booking ID', key: '_id', width: 20 },
+            { header: 'Guest', key: 'guestName', width: 30 },
+            { header: 'Room', key: 'roomNumber', width: 10 },
+            { header: 'Check-In', key: 'checkInDate', width: 15 },
+            { header: 'Check-Out', key: 'checkOutDate', width: 15 },
+            { header: 'Status', key: 'status', width: 15 }
+        ];
+
+        // Add rows to the worksheet
+        bookings.forEach(booking => {
+            worksheet.addRow({
+                _id: booking._id.toString().slice(-6),
+                guestName: booking.guest.name,
+                roomNumber: booking.roomNumber,
+                checkInDate: booking.checkInDate.toISOString().split('T')[0],
+                checkOutDate: booking.checkOutDate.toISOString().split('T')[0],
+                status: booking.status
+            });
+        });
+
+        // Style the header row
+        worksheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFF' } };
+        worksheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF6B6B' } };
+        worksheet.getRow(1).alignment = { horizontal: 'center', vertical: 'middle' };
+
+        // Send the file to the client as a download
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename="booking-history.xlsx"');
+        await workbook.xlsx.write(res);
+        res.end();
+
+    } catch (err) {
+        console.error('Error exporting bookings to Excel:', err);
+        res.status(500).send('Error exporting data');
+    }
+};
+
 exports.exportBookingHistoryPDF = async (req, res) => {
     try {
         const bookings = await Booking.find().populate('guest');
 
-        const doc = new PDFDocument({ margin: 30 });
-        res.header('Content-Type', 'application/pdf');
-        res.attachment('booking-history.pdf');
+        if (!bookings || bookings.length === 0) {
+            console.error('No bookings found');
+            return res.status(404).send('No booking data available');
+        }
 
-        doc.pipe(res);
+        // Render EJS template to HTML
+        const templatePath = path.join(__dirname, '../views/bookingHistoryPDF.ejs');
+        const htmlContent = await ejs.renderFile(templatePath, { bookings });
 
-        // Header Styling
-        doc.fontSize(18).text('Booking History Report', { align: 'center' });
-        doc.moveDown(2);
+        if (!htmlContent || htmlContent.trim() === '') {
+            console.error('EJS Template Rendering Error: Empty HTML');
+            return res.status(500).send('Error generating PDF content');
+        }
 
-        // Table Header
-        doc
-            .fontSize(12)
-            .text('Booking ID', 50, doc.y, { continued: true })
-            .text('Guest', 180, doc.y, { continued: true })
-            .text('Room', 280, doc.y, { continued: true })
-            .text('Check-In', 350, doc.y, { continued: true })
-            .text('Check-Out', 420, doc.y, { continued: true })
-            .text('Status', 500);
-        doc.moveDown(0.5);
-        doc.strokeColor('#000').lineWidth(1).moveTo(50, doc.y).lineTo(550, doc.y).stroke();
-        doc.moveDown(0.5);
+        // Create PDF options
+        let pdfOptions = { format: 'A4', printBackground: true };
 
-        // Table Rows
-        bookings.forEach(booking => {
-            doc
-                .fontSize(10)
-                .text(booking._id.toString().slice(-6), 50, doc.y, { continued: true })
-                .text(booking.guest.name, 180, doc.y, { continued: true })
-                .text(booking.roomNumber.toString(), 280, doc.y, { continued: true })
-                .text(booking.checkInDate.toISOString().split('T')[0], 350, doc.y, { continued: true })
-                .text(booking.checkOutDate.toISOString().split('T')[0], 420, doc.y, { continued: true })
-                .text(booking.status, 500);
-            doc.moveDown(0.5);
+        // Convert HTML to PDF
+        pdf.generatePdf({ content: htmlContent }, pdfOptions).then((pdfBuffer) => {
+            res.setHeader('Content-Disposition', 'attachment; filename="booking-history.pdf"');
+            res.setHeader('Content-Type', 'application/pdf');
+            res.send(pdfBuffer);
+        }).catch(err => {
+            console.error('PDF Generation Error:', err);
+            res.status(500).send('Failed to generate PDF');
         });
 
-        doc.end();
     } catch (err) {
-        console.error('Error exporting bookings to PDF:', err);
-        res.status(500).send('Error exporting data');
+        console.error('Error generating PDF:', err);
+        res.status(500).send('Error generating PDF');
     }
 };

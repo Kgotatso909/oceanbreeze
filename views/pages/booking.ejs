@@ -1,44 +1,654 @@
-<h1>Make a Booking</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css" />
+    <link rel="stylesheet" href="css/styles.css">
+    <style  nonce="<%= nonce %>">
+        /* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-<form action="/booking" method="POST">
-    <div class="form-group">
-        <label for="roomNumber">Room Number</label>
-        <select id="roomNumber" name="roomNumber" class="form-control" required>
-            <% rooms.forEach(room => { %>
-                <option value="<%= room.roomNumber %>"><%= room.roomNumber %></option>
-            <% }) %>
-        </select>
+html {
+    scroll-behavior: smooth; 
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    color: #000;
+    background: #fff;
+}
+
+.section-title {
+    position: relative;
+    text-align: center;
+    margin-bottom: 40px;  /* Space between title and grid */
+    padding: 0 20px; /* Add padding for better spacing on small devices */
+}
+
+.section-title  {
+    font-size: 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+/* Before and After Effects for Section Title */
+.section-title::before,
+.section-title::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 20%;
+    height: 1px;
+    background-color: #333;
+    transform: translateY(-50%);
+}
+
+.section-title::before {
+    left: 0;
+}
+
+.section-title::after {
+    right: 0;
+}
+
+/* Optional decorative flair */
+.section-title::before {
+    background-image: linear-gradient(45deg, #ff7e5f, #feb47b);
+    background-size: 100% 2px;
+}
+
+.section-title::after {
+    background-image: linear-gradient(45deg, #ff7e5f, #feb47b);
+    background-size: 100% 2px;
+}
+
+/* Make the title lines responsive */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.5rem;  /* Smaller font size for mobile */
+    }
+
+    .section-title::before,
+    .section-title::after {
+        width: 15%;  /* Shorten the lines for smaller screens */
+    }
+}
+
+img {
+  object-fit: cover;
+}
+
+.toast {
+    max-width: 400px;
+    opacity: 0.9;
+    font-size: 1rem;
+    background-color: #28a745;
+    color: white;
+}
+
+.toast-header {
+    background-color: #218838;
+}
+
+.toast-body {
+    background-color: #28a745;
+}
+
+.toast-body small {
+    color: #fff;
+}
+
+/* navigation */
+.sticky-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    background: rgba(32, 31, 31, 0.932);
+}
+
+
+.navbar {
+    width: 100%;
+    z-index: 998; 
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: rgba(32, 31, 31, 0.932);
+}
+
+.navbar .logo a {
+    font-size: 32px;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.navbar-menu ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.navbar-menu a {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: 0.3s ease;
+    position: relative;
+}
+
+.navbar-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(45deg, #ff0080, #ff8c00);
+    transition: 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.navbar-menu a:hover::after {
+    width: 100%;
+}
+
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    height: 100%;
+    width: 300px;
+    background: linear-gradient(135deg, #130f0f, #161616);
+    transition: left 0.3s ease;
+    z-index: 9999;
+}
+
+.sidebar.open {
+    left: 0;
+}
+
+.sidebar-content {
+    padding: 50px 20px;
+}
+
+.sidebar-content h3 {
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 15px 0;
+    border-bottom: 1px solid #fff;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+    color: #000;
+}
+
+#sidebar-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+#hamburger-toggle {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    padding: 10px;
+    cursor: pointer;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .navbar-menu {
+        display: none;
+    }
+
+    #hamburger-toggle {
+        display: block;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    body, html {
+        overflow-x: hidden;
+    }
+}
+
+
+/* contact Hero Section */
+.contact-hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px; /* Suitable height for contact section */
+  width: 100%; /* Full width */
+  background: url('images/hero-3.jpg') no-repeat center center/cover; /* Image background */
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+  color: white;
+}
+
+/* Background gradient overlay */
+.contact-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.4));
+  z-index: 1;
+}
+
+/* Content inside the hero section */
+.contact-hero-content {
+  position: relative;
+  z-index: 2;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Title */
+.contact-title {
+  font-size: 3.5rem; /* Large title */
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  animation: fadeInUp 1s ease-out;
+}
+
+/* Description */
+.contact-description {
+  font-size: 1.2rem;
+  max-width: 80%;
+  margin: 0 auto;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  opacity: 0.85;
+  margin-bottom: 25px;
+  animation: fadeInUp 1.5s ease-out;
+}
+
+/* Call to Action Button */
+.contact-cta {
+  display: inline-block;
+  padding: 15px 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 2px solid #fff;
+  background-color: transparent;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 1px;
+  border-radius: 30px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect on CTA */
+.contact-cta:hover {
+  background-color: #fff;
+  color: #333;
+}
+
+/* Fade-in animation for elements */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  margin: 0;
+}
+
+.booking-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 40px;
+        }
+
+        /* Form Styling */
+        .booking-form {
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        
+
+        .booking-form::before {
+            content: "";
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 25px solid #fff;
+        }
+
+        .booking-form h1 {
+            color: #333;
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .booking-form p {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(48, 17, 223, 0.7);
+    pointer-events: none;
+}
+
+
+        .form-label {
+            color: #333;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            background: #f4f5f6;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        .btn-submit {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #0056b3;
+        }
+
+        /* Hide the default select dropdown */
+ .custom-dropdown {
+        position: relative;
+        width: 100%;
+    }
+
+    .custom-dropdown .selected {
+        background: #f4f5f6;
+        color: #000;
+        padding: 12px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Dropdown list */
+    .custom-dropdown .dropdown-list {
+        position: absolute;
+        width: 100%;
+        background: rgb(196, 191, 191);
+        color: #000;
+        border-top: none;
+        display: none;
+        z-index: 1000;
+        border-radius: 5px;
+    }
+
+    .custom-dropdown.active .dropdown-list {
+        display: block;
+    }
+
+    .custom-dropdown .dropdown-list div {
+        padding: 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: 0.3s;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .custom-dropdown .dropdown-list div:last-child {
+        border-bottom: none;
+    }
+
+    .custom-dropdown .dropdown-list div:hover {
+        background: #3498db;
+        color: white;
+    }
+
+
+        /* Contact Details Styling */
+        .contact-details {
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-left: 40px;
+            flex: 1;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .contact-details h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .contact-details .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .contact-details i {
+            font-size: 1.5rem;
+            color: #007bff;
+            margin-right: 15px;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 768px) {
+            .booking-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-details {
+                margin-left: 0;
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include("../partials/_nav.ejs") %>
+    <section class="contact-hero">
+        <div class="contact-hero-content">
+          <h1 class="contact-title">Your Adventure Starts Here</h1>
+          <p class="contact-description">Secure your reservations in minutes and start planning your adventure today.</p>
+          <a href="/booking" class="contact-cta">Book Now</a>
+        </div>
+      </section>
+      <div class="container pb-5">
+        <div class="booking-container" >
+            <!-- booking Form -->
+            <div class="booking-form">
+                <h1 class="text-primary">Reserve Your Spot</h1>
+                <p class="lead">Select your dates, choose your options, and confirm your reservation in just a few clicks.</p>
+
+                <form action="/booking" class="form" method="POST">
+                    <div class="form-group">
+                        <select name="roomNumber" id="roomNumber" class="form-control" required>
+                            <option>Select a Room</option>
+                            <% rooms.forEach(room => { %>
+                                <option value="<%= room.roomNumber %>">Room <%= room.roomNumber %> (Capacity: <%= room.capacity %>)</option>
+                            <% }); %>
+                        </select>
+                    </div>
+                
+                    <div class="form-group">
+                        <input type="text" class="form-control datefield" name="checkInDate" id="inputCheckIn" placeholder="Check In" readonly>
+                        <i class="fas fa-calendar-alt input-icon"></i>
+                        <input type="text" class="form-control datefield" name="checkOutDate" id="inputCheckOut" placeholder="Check Out" readonly>
+                        <i class="fas fa-calendar-alt input-icon"></i>
+                    </div>
+                
+                    <div class="form-group">
+                        <input type="text" id="name" name="guestName" class="form-control" placeholder="Enter your first name" required>
+                    </div>
+                
+                    <div class="form-group">
+                        <input type="email" id="email" name="guestEmail" class="form-control" placeholder="Enter your email" required>
+                        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="Enter your mobile number" required>
+                    </div>
+                
+                    
+                        <input type="number" id="numOfGuests" name="numOfGuests" class="form-control mb-5" placeholder="Enter number of guests" required>
+            
+                    <button type="submit" class="btn btn-submit">Book Now</button>
+                </form>
+            </div>
+
+            <!-- Contact Details -->
+            <div class="contact-details">
+                <h2>Contact Information</h2>
+
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email: support@bookingapp.com</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Phone: +123 456 7890</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Address: 123 booking St, City, Country</span>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="checkInDate">Check-In Date</label>
-        <input type="date" id="checkInDate" name="checkInDate" class="form-control" required>
-    </div>
-
-    <div class="form-group">
-        <label for="checkOutDate">Check-Out Date</label>
-        <input type="date" id="checkOutDate" name="checkOutDate" class="form-control" required>
-    </div>
-
-    <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" name="guestName" class="form-control" required>
-    </div>
-
-    <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="guestEmail" class="form-control" required>
-    </div>
-
-    <div class="form-group">
-        <label for="numOfGuests">Number of Guests</label>
-        <input type="number" id="numOfGuests" name="numOfGuests" class="form-control" required>
-    </div>
-
-    <div class="form-group">
-        <label for="phoneNumber">Phone Number</label>
-        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" required>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Book Now</button>
-</form>
+  
+    <%- include("../partials/_footer.ejs") %>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.1.6/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paroller.js/1.4.7/jquery.paroller.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="js/flatpickr.js"></script>
+    <script src="js/main.js"></script>
+    </body>
+</html>

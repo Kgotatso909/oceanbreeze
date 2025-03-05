@@ -2,48 +2,74 @@
 <html>
 <head>
     <title>Send Email</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <style nonce="<%= nonce %>">
+       #promoFields {
+        display: none;
+       } 
+    </style>
 </head>
 <body>
-    <h2>Send Email to Subscribers</h2>
+     <!-- Side bar  -->
+     <%- include("../../partials/admin/_nav.ejs") %>
 
-    <% if (success) { %>
-        <p style="color: green;"><%= success %></p>
-    <% } %>
-    <% if (error) { %>
-        <p style="color: red;"><%= error %></p>
-    <% } %>
+     <div class="content container mt-4">
+        <h2 class="mb-4 text-center">Send Email to Subscribers</h2>
 
-    <form action="/admin/send-email" method="POST">
-        <label for="recipientEmail">Recipient Email:</label>
-        <input type="email" name="recipientEmail" required>
+        <form action="/admin/send-email" method="POST" class="card p-4 shadow-lg">
+            <!-- Recipient Email -->
+            <div class="mb-3">
+                <label for="recipientEmail" class="form-label">Recipient Email:</label>
+                <input type="email" class="form-control" name="recipientEmail" required>
+            </div>
 
-        <label for="subject">Subject:</label>
-        <input type="text" name="subject" required>
+            <!-- Subject -->
+            <div class="mb-3">
+                <label for="subject" class="form-label">Subject:</label>
+                <input type="text" class="form-control" name="subject" required>
+            </div>
 
-        <label for="template">Select Template:</label>
-        <select name="template" required>
-            <option value="welcome">Welcome Email</option>
-            <option value="promotion">Promotional Offer</option>
-            <option value="custom">Custom Message</option>
-        </select>
+            <!-- Template Selection -->
+            <div class="mb-3">
+                <label for="template" class="form-label">Select Template:</label>
+                <select name="template" class="form-select" required>
+                    <option value="welcome">Welcome Email</option>
+                    <option value="promotion">Promotional Offer</option>
+                    <option value="custom">Custom Message</option>
+                </select>
+            </div>
 
-        <label for="name">Recipient Name:</label>
-        <input type="text" name="name" required>
+            <!-- Recipient Name -->
+            <div class="mb-3">
+                <label for="name" class="form-label">Recipient Name:</label>
+                <input type="text" class="form-control" name="name" required>
+            </div>
 
-        <div id="promoFields" style="display: none;">
-            <label for="discount">Discount (%):</label>
-            <input type="number" name="discount">
-            
-            <label for="promoCode">Promo Code:</label>
-            <input type="text" name="promoCode">
-        </div>
+            <!-- Promotion Fields (Hidden by Default) -->
+            <div id="promoFields" class="border rounded p-3 mb-3 bg-light" ">
+                <h5 class="text-primary">Promotion Details</h5>
+                <div class="mb-3">
+                    <label for="discount" class="form-label">Discount (%):</label>
+                    <input type="number" class="form-control" name="discount">
+                </div>
+                <div class="mb-3">
+                    <label for="promoCode" class="form-label">Promo Code:</label>
+                    <input type="text" class="form-control" name="promoCode">
+                </div>
+            </div>
 
-        <label for="message">Message:</label>
-        <textarea name="message"></textarea>
+            <!-- Message -->
+            <div class="mb-3">
+                <label for="message" class="form-label">Message:</label>
+                <textarea class="form-control" name="message" rows="4"></textarea>
+            </div>
 
-        <button type="submit">Send Email</button>
-    </form>
-
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary w-100">Send Email</button>
+        </form>
+    </div>
+    
     <script nonce="<%= nonce %>">
         document.querySelector('select[name="template"]').addEventListener('change', function() {
             document.getElementById('promoFields').style.display = this.value === 'promotion' ? 'block' : 'none';

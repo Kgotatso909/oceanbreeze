@@ -1,0 +1,16 @@
+body {
+    display: flex;
+}
+.sidebar {
+    width: 250px;
+    background: #343a40;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+    position: fixed;
+}
+.content {
+    margin-left: 260px;
+    padding: 20px;
+    width: 100%;
+}

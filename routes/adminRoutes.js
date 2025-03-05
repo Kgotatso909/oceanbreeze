@@ -2,8 +2,6 @@
 const express = require('express');
 const router = express.Router();
 const protectRoute = require('../middlewares/authMiddleware');
-const { Parser } = require('json2csv');
-const PDFDocument = require('pdfkit');
 const Booking = require('../models/booking');
 const roomController = require('../controllers/roomController');
 const bookingController = require('../controllers/bookingController');
@@ -54,7 +52,10 @@ router.post('/send-newsletter', newsletterController.sendNewsletter);
 router.get('/send-newsletter', newsletterController.renderNewsletterPage);
 
 // Export Booking History (CSV)
-router.get('/export-booking-history', bookingController.exportBookingHistoryCSV);
+router.get('/export-booking-history-csv', bookingController.exportBookingHistoryCSV);
+
+// Export Booking History (Excel)
+router.get('/export-booking-history-excel', bookingController.exportBookingHistoryExcel);
 
 // Export Booking History (PDF)
 router.get('/export-booking-history-pdf', bookingController.exportBookingHistoryPDF);
