@@ -1,23 +1,26 @@
-<!-- /views/pages/admin/login.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
+    <link rel="stylesheet" href="/css/auth.css"> <!-- External CSS -->
 </head>
 <body>
-    <form id="loginForm" method="POST" action="/auth/login">
-        <input type="email" id="email" name="email" placeholder="Email" required />
-        <input type="password" id="password" name="password" placeholder="Password" required />
-        <button type="submit">Login</button>
-    </form>
+    <div class="auth-container">
+        <h2>Admin Login</h2>
+        <form id="loginForm" method="POST" action="/auth/login">
+            <input type="email" id="email" name="email" placeholder="Email" required />
+            <input type="password" id="password" name="password" placeholder="Password" required />
+            <button type="submit">Login</button>
+        </form>
+        <p><a href="/auth/forgot-password">Forgot Password?</a></p>
+    </div>
 
     <script>
         const loginForm = document.getElementById('loginForm');
-
         loginForm.addEventListener('submit', async (event) => {
-            event.preventDefault();  // Prevent the default form submission
+            event.preventDefault();
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -25,19 +28,15 @@
             try {
                 const response = await fetch('/auth/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password }),
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    // If login is successful, the backend will handle the redirect
-                    // No need for additional redirect logic here
+                    window.location.href = "/admin/dashboard";
                 } else {
-                    // Handle error response from backend
                     alert(data.message || 'Login failed');
                 }
             } catch (error) {

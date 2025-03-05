@@ -5,7 +5,7 @@ const Admin = require('../models/admin');
 const nodemailer = require('nodemailer');
 
 // Admin Registration Handler
-const adminRegister = async (req, res) => {
+exports.adminRegister = async (req, res) => {
     const { username, email, password } = req.body;
 
     // Simple validation
@@ -60,7 +60,7 @@ const adminRegister = async (req, res) => {
 };
 
 // Admin Login Handler
-const adminLogin = async (req, res) => {
+exports.adminLogin = async (req, res) => {
     const { email, password } = req.body;
 
     // Check if the admin exists
@@ -92,7 +92,7 @@ const adminLogin = async (req, res) => {
 
 
 // Admin Email Verification Handler
-const verifyAdmin = async (req, res) => {
+exports.verifyAdmin = async (req, res) => {
     const { token } = req.params;
 
     try {
@@ -116,4 +116,71 @@ const verifyAdmin = async (req, res) => {
     }
 };
 
-module.exports = { adminRegister, adminLogin, verifyAdmin };
+exports.adminLogout = (req, res) => {
+    res.clearCookie('authToken');  // Remove the auth token from cookies
+    res.redirect('/auth/login');  // Redirect to login page
+};
+
+exports.forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    // Check if the email exists
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+        return res.status(400).json({ message: 'Email not found' });
+    }
+
+    // Generate a reset token
+    const resetToken = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+
+    // Create email transporter
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    });
+
+    // Email options
+    const resetLink = `${process.env.BASE_URL}/auth/reset-password/${resetToken}`;
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: admin.email,
+        subject: 'Password Reset Request',
+        text: `Click the link to reset your password: ${resetLink}`,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error sending email' });
+        }
+        res.json({ message: 'Password reset link sent to email' });
+    });
+};
+
+exports.resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    try {
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const admin = await Admin.findById(decoded.id);
+
+        if (!admin) {
+            return res.status(400).json({ message: 'Invalid or expired token' });
+        }
+
+        // Hash new password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        admin.password = hashedPassword;
+        await admin.save();
+
+        res.json({ message: 'Password reset successfully. You can now login with your new password.' });
+    } catch (err) {
+        res.status(400).json({ message: 'Invalid or expired token' });
+    }
+};
+

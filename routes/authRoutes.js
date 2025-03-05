@@ -1,22 +1,34 @@
 // /routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
-const { adminRegister, adminLogin, verifyAdmin } = require('../controllers/authController');
+const authController  = require('../controllers/authController');
 const protectRoute = require('../middlewares/authMiddleware');
 
 // Admin registration route
 router.get('/register', (req, res) => {
     res.render('pages/register');
 });
-router.post('/register', adminRegister);
+router.post('/register', authController.adminRegister);
 
 // Admin login route
 router.get('/login', (req, res) => {
     res.render('pages/login');
 });
-router.post('/login', adminLogin);
+router.post('/login', authController.adminLogin);
 
 // Admin email verification route
-router.get('/verify/:token', verifyAdmin);
+router.get('/verify/:token', authController.verifyAdmin);
+
+router.get('/logout', authController.adminLogout);
+
+router.post('/forgot-password', authController.forgotPassword);
+router.get('/forgot-password', (req, res) => {
+    res.render('pages/forgot-password');  
+});
+router.get('/reset-password/:token', (req, res) => {
+    res.render('pages/reset-password', { token: req.params.token });
+});
+router.post('/reset-password/:token', authController.resetPassword);
+
 
 module.exports = router;
