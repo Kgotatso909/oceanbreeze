@@ -24,9 +24,14 @@ const adminSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  role: {
+    type: String,
+    enum: ['admin', 'monitor'],  
+    default: 'admin',  
+  },
 }, { timestamps: true });
 
-// Compare hashed password with the plaintext password
+
 adminSchema.methods.comparePassword = function (password) {
   return bcrypt.compare(password, this.password);
 };

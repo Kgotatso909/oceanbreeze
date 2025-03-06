@@ -4,7 +4,7 @@ const Booking = require('../models/booking');
 // Get all available rooms
 exports.getAllRooms = async (req, res) => {
     try {
-        const rooms = await Room.find({ available: true }); 
+        const rooms = await Room.find(); 
         res.render('pages/admin/manageRooms', { rooms });
     } catch (err) {
         res.status(500).send('Error fetching rooms');
@@ -54,26 +54,48 @@ exports.editRoomForm = async (req, res) => {
     }
 };
 
+
 // Update an existing room
 exports.updateRoom = async (req, res) => {
-    const roomId = req.params.id;
-    const { roomNumber, capacity, price, roomType, description, available } = req.body;
-
     try {
-        let updateData = { roomNumber, capacity, price, roomType, description, available: available === 'on' };
-
-        // If new images are uploaded, update the images array
-        if (req.files && req.files.length > 0) {
-            updateData.images = req.files.map(file => `/images/upload/${file.filename}`);
-        }
-
-        await Room.findByIdAndUpdate(roomId, updateData);
-        res.redirect('/admin/manageRooms');
-    } catch (err) {
-        res.status(500).send('Error updating room');
+      const roomId = req.params.id;
+      // Destructure the incoming fields. Notice that available will be "true" or "false" as strings.
+      const { roomNumber, capacity, price, roomType, description, available } = req.body;
+      
+      // Convert available to boolean. When the checkbox is checked, it sends "true", otherwise "false".
+      const availableBool = available === "true";
+  
+      // Build the update data object.
+      let updateData = {
+        roomNumber,
+        capacity,
+        price,
+        roomType,
+        description,
+        available: availableBool
+      };
+  
+      // If new images are uploaded, update the images field.
+      if (req.files && req.files.length > 0) {
+        updateData.images = req.files.map(file => `/images/upload/${file.filename}`);
+      }
+  
+      const updatedRoom = await Room.findByIdAndUpdate(
+        roomId,
+        updateData,
+        { new: true, runValidators: true }
+      );
+  
+      if (!updatedRoom) {
+        return res.status(404).json({ error: "Room not found" });
+      }
+  
+      res.redirect('/admin/manageRooms');
+    } catch (error) {
+      console.error("Error updating room:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
-};
-
+  };
 
 // Delete a room
 exports.deleteRoom = async (req, res) => {

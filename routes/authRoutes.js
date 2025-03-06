@@ -2,15 +2,21 @@
 const express = require('express');
 const router = express.Router();
 const authController  = require('../controllers/authController');
-const protectRoute = require('../middlewares/authMiddleware');
+const protectRoute = require('../middlewares/authMiddleware')
+const Admin = require('../models/admin');
 
-// Admin registration route
-router.get('/register', (req, res) => {
+
+router.get('/register', async (req, res) => {
+    const existingAdmin = await Admin.findOne();
+    if (existingAdmin) {
+        return res.redirect('/auth/login');  
+    }
     res.render('pages/register');
 });
+
 router.post('/register', authController.adminRegister);
 
-// Admin login route
+
 router.get('/login', (req, res) => {
     res.render('pages/login');
 });

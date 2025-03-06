@@ -14,7 +14,7 @@ const roomSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true,
-        min: 0,  // Ensure price is a positive number
+        min: 0,  
     },
     available: {
         type: Boolean,

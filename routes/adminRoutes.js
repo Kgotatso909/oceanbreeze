@@ -1,7 +1,6 @@
-// /routes/adminRoutes.js
 const express = require('express');
 const router = express.Router();
-const protectRoute = require('../middlewares/authMiddleware');
+const { protectRoute, setUserLocals } = require('../middlewares/authMiddleware');
 const Booking = require('../models/booking');
 const roomController = require('../controllers/roomController');
 const bookingController = require('../controllers/bookingController');
@@ -11,67 +10,50 @@ const emailController = require('../controllers/emailController');
 const upload = require('../middlewares/upload');
 const adminController = require('../controllers/adminController');
 
-// Manage bookings (list)
-router.get('/manage-bookings', protectRoute, bookingController.manageBookings);
+// Apply middlewares for all routes
+router.use(protectRoute, setUserLocals);
 
-// Update booking status
-router.get('/update-booking/:id', protectRoute, bookingController.viewBookings);
+// Manage bookings
+router.get('/manage-bookings', bookingController.manageBookings);
+router.get('/update-booking/:id', bookingController.viewBookings);
+router.post('/update-booking/:id', bookingController.updateBooking);
 
-router.post('/update-booking/:id', protectRoute, bookingController.updateBooking);
-
-// Route to display all rooms
-router.get('/manageRooms', protectRoute, roomController.getAllRooms);
-
-// Route to show the form for creating a new room
-router.get('/createRoom', protectRoute, roomController.createRoomForm);
-
-// Route to handle creating a new room
+// Manage rooms
+router.get('/manageRooms', roomController.getAllRooms);
+router.get('/createRoom', roomController.createRoomForm);
 router.post('/createRoom', upload.array('images', 5), roomController.createRoom);
+router.get('/editRoom/:id', roomController.editRoomForm);
+router.post('/editRoom/:id', upload.array('images', 5), roomController.updateRoom);
+router.post('/deleteRoom/:id', roomController.deleteRoom);
 
-// Route to show the form for editing a room
-router.get('/editRoom/:id', protectRoute, roomController.editRoomForm);
-
-// Route to handle updating an existing room
-router.post('/editRoom/:id', protectRoute, roomController.updateRoom);
-
-// Route to handle deleting a room
-router.post('/deleteRoom/:id', protectRoute, roomController.deleteRoom);
-
-// Admin Dashboard Route
-router.get('/dashboard', protectRoute, adminController.getAdminDashboard);
-
+// Admin Dashboard
+router.get('/dashboard', adminController.getAdminDashboard);
 router.get('/bookings/filter', adminController.getFilteredBookings);
-
 router.post('/bookings/batch-process', adminController.batchProcessBookings);
-
-// Bulk email notification route
 router.post('/bookings/send-notifications', adminController.sendBulkEmailNotifications);
 
+// Newsletter routes
 router.post('/subscribe', newsletterController.subscribe);
 router.post('/send-newsletter', newsletterController.sendNewsletter);
 router.get('/send-newsletter', newsletterController.renderNewsletterPage);
 
-// Export Booking History (CSV)
+// Export booking history
 router.get('/export-booking-history-csv', bookingController.exportBookingHistoryCSV);
-
-// Export Booking History (Excel)
 router.get('/export-booking-history-excel', bookingController.exportBookingHistoryExcel);
-
-// Export Booking History (PDF)
 router.get('/export-booking-history-pdf', bookingController.exportBookingHistoryPDF);
 
-// Render email sending page
+// Email routes
 router.get('/send-email', (req, res) => {
     res.render('pages/admin/sendEmail', { success: req.query.success, error: req.query.error });
 });
-
-// Handle email sending
 router.post('/send-email', emailController.sendEmail);
 
-// Route to view messages (with optional filter)
+// Contact messages
 router.get('/messages', contactController.getMessages);
-
-// Route to update message status
 router.post('/messages/reply', contactController.markAsReplied);
+
+// Admin monitor creation
+router.post('/create-monitor', adminController.createMonitor);
+router.get('/create-monitor', adminController.renderCreateMonitorPage);
 
 module.exports = router;
