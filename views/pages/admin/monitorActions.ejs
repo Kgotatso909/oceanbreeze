@@ -1,0 +1,59 @@
+<% if (user && user.role === 'admin') { %>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Monitor Actions</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/admin.css">
+    </head>
+    <body>
+    
+      
+        <%- include("../../partials/admin/_nav.ejs") %>
+    
+        <div class="content container mt-5">
+            <div class="card p-4 shadow-lg">
+                <h2 class="mb-3 text-center">Monitor Actions</h2>
+    
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Monitor</th>
+                                <th>Action Type</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (logs.length > 0) { %>
+                                <% logs.forEach(log => { %>
+                                    <tr>
+                                        <td><%= log.monitor.username %></td>
+                                        <td><%= log.actionType %></td>
+                                        <td><%= log.description %></td>
+                                        <td><%= new Date(log.timestamp).toLocaleString() %></td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="4" class="text-center">No actions recorded yet.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>
+    <% } else { %>
+        <div class="container mt-5 text-center">
+            <h3 class="text-danger">You are not authorized to view this page.</h3>
+        </div>
+    <% } %>
+    

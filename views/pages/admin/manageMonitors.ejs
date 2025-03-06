@@ -1,0 +1,24 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% monitors.forEach(monitor => { %>
+            <tr>
+                <td><%= monitor.username %></td>
+                <td><%= monitor.email %></td>
+                <td><%= monitor.role %></td>
+                <td>
+                    <form action="/admin/delete-monitor/<%= monitor._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this monitor?');">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>

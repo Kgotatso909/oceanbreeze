@@ -31,12 +31,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "jest": "^29.7.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kgotatso-mohlala/oceanbreeze.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kgotatso-mohlala/oceanbreeze/issues"
+  },
+  "homepage": "https://github.com/Kgotatso-mohlala/oceanbreeze#readme"
 }
