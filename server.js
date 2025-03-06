@@ -8,10 +8,9 @@ const cookieParser = require('cookie-parser');
 const setSecurityHeaders = require('./middlewares/helmet'); 
 const errorMiddleware = require('./middlewares/errorMiddleware'); 
 const bookingController = require('./controllers/bookingController');
-const connectDB = require('./config/database'); 
+const connectDB = require('./config/database');
 
-
-// Import routes for registration and login
+// Import routes
 const homeRoutes = require('./routes/index');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
@@ -26,23 +25,25 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
+// Set EJS as the view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Apply security headers, logging, and body parsing middlewares
 app.use(setSecurityHeaders()); 
 app.use(cors());
-app.use(morgan('dev'));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev')); // Use different logging based on env
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Admin registration and login routes
+// Define routes
 app.use('/', roomRoutes);
 app.use('/', homeRoutes);
 app.use('/auth', authRoutes);
-app.use("/admin", adminRoutes)
-app.use("/booking", bookingRoutes)
+app.use('/admin', adminRoutes);
+app.use('/booking', bookingRoutes);
 app.use('/', contactRoutes);
 
 // Schedule tasks (Runs every day at midnight)
