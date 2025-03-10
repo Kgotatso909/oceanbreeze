@@ -5,50 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking History Report</title>
     <style>
+        /* General Reset */
+        body, h1, h2, table, th, td {
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f7f7f7;
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f9f9f9;
             color: #333;
+            padding: 30px;
+            line-height: 1.6;
         }
 
         h1 {
             text-align: center;
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: #fff;
-            background: linear-gradient(45deg, #ff6b6b, #f0a500);
-            display: inline-block;
-            padding: 20px;
-            position: relative;
-            border-radius: 8px;
-        }
-
-        h1::before, h1::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 5px;
-            background-color: #fff;
-            left: 0;
-            bottom: -10px;
-            border-radius: 5px;
-        }
-
-        h1::after {
-            top: -10px;
-            bottom: auto;
+            background: linear-gradient(135deg, #6a1b9a, #ff7043);
+            padding: 15px 30px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             font-size: 2rem;
             color: #333;
-            margin-top: 40px;
+            margin-bottom: 20px;
             text-align: center;
-            font-weight: bold;
-            background-color: #ff6b6b;
-            padding: 10px;
-            color: white;
-            border-radius: 5px;
+            font-weight: 600;
+            background-color: #ff7043;
+            padding: 12px;
+            color: #fff;
+            border-radius: 8px;
             width: fit-content;
             margin-left: auto;
             margin-right: auto;
@@ -56,68 +47,89 @@
 
         table {
             width: 100%;
-            border-collapse: collapse;
             margin-top: 20px;
-            background-color: #fff;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-collapse: collapse;
             border-radius: 8px;
             overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
+            padding: 16px;
             text-align: left;
         }
 
         th {
-            background-color: #ff6b6b;
+            background-color: #6a1b9a;
             color: #fff;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f0f0f0;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         td {
             color: #555;
+            font-size: 1rem;
+        }
+
+        td:nth-child(5), td:nth-child(6) {
+            font-weight: bold;
         }
 
         td:nth-child(5) {
-            color: #007bff;
+            color: #1976d2;
         }
 
         td:nth-child(6) {
-            font-weight: bold;
-            color: #28a745;
+            color: #388e3c;
         }
 
-        /* Responsive design for smaller screens */
+        tr:nth-child(even) {
+            background-color: #f4f4f4;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 20px;
             }
-            
+
             h1 {
-                font-size: 2.5rem;
-                padding: 15px;
+                font-size: 2rem;
+                padding: 12px 20px;
             }
 
             h2 {
                 font-size: 1.5rem;
-                margin-top: 30px;
+                margin-top: 20px;
             }
 
             table {
-                margin-top: 10px;
+                margin-top: 15px;
             }
 
             th, td {
-                padding: 8px;
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Optional: Add nice page break for PDF */
+        @media print {
+            body {
+                padding: 10px;
+            }
+
+            h1, h2 {
+                page-break-after: avoid;
+            }
+
+            table {
+                page-break-inside: auto;
             }
         }
     </style>
