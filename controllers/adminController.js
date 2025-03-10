@@ -6,6 +6,7 @@ const Revenue = require('../models/revenue');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const AuditLog = require('../models/auditLog');
+const moment = require('moment');
 
 // Batch process bookings (approve, reject, update)
 exports.batchProcessBookings = async (req, res) => {
@@ -158,4 +159,49 @@ exports.renderCreateMonitorPage = (req, res) => {
         return res.status(403).send('You are not authorized to access this page.');
     }
     res.render('pages/admin/createMonitor', { user: req.user });
+};
+
+exports.viewMonitorActions = async (req, res) => {
+    try {
+        const logs = await AuditLog.find().populate('monitor', 'username').sort({ createdAt: -1 });
+
+        res.render('pages/admin/monitorActions', { logs });
+    } catch (error) {
+        console.error("Error fetching audit logs:", error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+
+exports.deleteMonitor = async (req, res) => {
+    try {
+        const monitorId = req.params.id;
+
+        // Find monitor
+        const monitor = await Admin.findById(monitorId);
+        if (!monitor || monitor.role !== 'monitor') {
+            return res.status(404).send("Monitor not found or unauthorized deletion.");
+        }
+
+        // Delete monitor
+        await Admin.findByIdAndDelete(monitorId)
+
+        res.redirect('/admin/manage-monitors'); // Redirect back to monitor management
+    } catch (error) {
+        console.error("Error deleting monitor:", error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+exports.getMonitors = async (req, res) => {
+    try {
+        // Find all monitors
+        const monitors = await Admin.find({ role: 'monitor' });
+
+        // Render the monitors list page, passing the monitors data
+        res.render('pages/admin/manageMonitors', { monitors });
+    } catch (error) {
+        console.error("Error fetching monitors:", error);
+        res.status(500).send("Internal Server Error");
+    }
 };

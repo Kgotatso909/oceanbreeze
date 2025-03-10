@@ -2,6 +2,7 @@
 const moment = require('moment-timezone'); // To handle time zone normalization
 const Booking = require('../models/booking');
 const Guest = require('../models/guest');
+const AuditLog = require('../models/auditLog');
 const Room = require('../models/room');  
 const Revenue = require('../models/revenue');
 const { Parser } = require('json2csv');
@@ -58,31 +59,30 @@ exports.manageBookings = async (req, res) => {
     }
 };
 
-
 exports.updateBooking = async (req, res) => {
     const bookingId = req.params.id;
     const status = req.body.status;
 
     try {
         const booking = await Booking.findById(bookingId).populate('guest');
-
         if (!booking) {
             return res.status(404).send('Booking not found');
         }
+
+        let actionDescription = '';
 
         switch (status) {
             case 'approved':
                 if (booking.status === 'pending') {
                     booking.status = 'approved';
                     await booking.save();
-
                     await Revenue.addRevenue(booking.roomNumber);
-                    sendEmail(
-                        booking.guest.email, 
-                        'Booking Approved', 
-                        'bookingApproved', // Template name
-                        { name: booking.guest.name, roomNumber: booking.roomNumber }
-                    );
+                    sendEmail(booking.guest.email, 'Booking Approved', 'bookingApproved', { 
+                        name: booking.guest.name, 
+                        roomNumber: booking.roomNumber 
+                    });
+
+                    actionDescription = `Approved booking for room ${booking.roomNumber}`;
                 }
                 break;
 
@@ -90,6 +90,7 @@ exports.updateBooking = async (req, res) => {
                 if (booking.status === 'approved') {
                     booking.status = 'checked-in';
                     await booking.save();
+                    actionDescription = `Checked in guest for booking ID ${bookingId}`;
                 }
                 break;
 
@@ -97,6 +98,7 @@ exports.updateBooking = async (req, res) => {
                 if (booking.status === 'checked-in') {
                     booking.status = 'completed';
                     await booking.save();
+                    actionDescription = `Completed booking for room ${booking.roomNumber}`;
                 }
                 break;
 
@@ -105,23 +107,31 @@ exports.updateBooking = async (req, res) => {
                 if (['approved', 'checked-in'].includes(booking.status)) {
                     booking.status = status;
                     await booking.save();
+                    actionDescription = `Marked booking as ${status} for room ${booking.roomNumber}`;
                 }
                 break;
 
             case 'rejected':
                 if (booking.status === 'pending') {   
-                    sendEmail(
-                        booking.guest.email, 
-                        'Booking Rejected', 
-                        'bookingRejected', // Template name
-                        { name: booking.guest.name }
-                    );
+                    sendEmail(booking.guest.email, 'Booking Rejected', 'bookingRejected', { 
+                        name: booking.guest.name 
+                    });
                     await Booking.findByIdAndDelete(bookingId);
+                    actionDescription = `Rejected and deleted booking ID ${bookingId}`;
                 }
                 break;
 
             default:
                 return res.status(400).send('Invalid status update.');
+        }
+
+        // Log the action if a monitor performed it
+        if (req.user.role === 'monitor' && actionDescription) {
+            await AuditLog.create({
+                monitor: req.user.id,  // Extract monitor ID from req.user
+                actionType: 'UPDATE_BOOKING',
+                description: actionDescription,
+            });
         }
 
         res.redirect('/admin/manage-bookings');

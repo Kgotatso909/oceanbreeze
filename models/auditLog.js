@@ -1,20 +1,26 @@
-// /models/auditLog.js
 const mongoose = require('mongoose');
+const Admin = require("./admin")
 
 const auditLogSchema = new mongoose.Schema({
-    action: {
-        type: String,
-        required: true,
-    },
-    message: {
-        type: String,
-        required: true,
-    },
-    admin: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Admin',
-        required: true,
-    },
-}, { timestamps: true });
+  monitor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: Admin, // Reference to the Admin model (only monitors)
+    required: true,
+  },
+  actionType: {
+    type: String,
+    enum: ['UPDATE_BOOKING', 'CREATE_ROOM', 'UPDATE_ROOM', 'DELETE_ROOM', 'MANAGE_MESSAGE', 'OTHER'],
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-module.exports = mongoose.model('AuditLog', auditLogSchema);
+const AuditLog = mongoose.model('AuditLog', auditLogSchema);
+module.exports = AuditLog;

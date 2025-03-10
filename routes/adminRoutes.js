@@ -9,6 +9,7 @@ const newsletterController = require('../controllers/newsletterController');
 const emailController = require('../controllers/emailController');
 const upload = require('../middlewares/upload');
 const adminController = require('../controllers/adminController');
+const moment = require('moment');
 
 // Apply middlewares for all routes
 router.use(protectRoute, setUserLocals);
@@ -17,6 +18,7 @@ router.use(protectRoute, setUserLocals);
 router.get('/manage-bookings', bookingController.manageBookings);
 router.get('/update-booking/:id', bookingController.viewBookings);
 router.post('/update-booking/:id', bookingController.updateBooking);
+
 
 // Manage rooms
 router.get('/manageRooms', roomController.getAllRooms);
@@ -31,6 +33,9 @@ router.get('/dashboard', adminController.getAdminDashboard);
 router.get('/bookings/filter', adminController.getFilteredBookings);
 router.post('/bookings/batch-process', adminController.batchProcessBookings);
 router.post('/bookings/send-notifications', adminController.sendBulkEmailNotifications);
+router.get('/monitor-actions', adminController.viewMonitorActions);
+router.post('/delete-monitor/:id', adminController.deleteMonitor);
+router.get('/manage-monitors', adminController.getMonitors);
 
 // Newsletter routes
 router.post('/subscribe', newsletterController.subscribe);
@@ -55,5 +60,6 @@ router.post('/messages/reply', contactController.markAsReplied);
 // Admin monitor creation
 router.post('/create-monitor', adminController.createMonitor);
 router.get('/create-monitor', adminController.renderCreateMonitorPage);
+
 
 module.exports = router;
