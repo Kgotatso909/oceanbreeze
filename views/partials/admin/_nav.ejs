@@ -17,6 +17,10 @@
           <li class="nav-item"><a href="/admin/monitor-actions" class="nav-link text-white">Audit Monitors</a></li>
       <% } %>
 
+      <% if (user && user.role === 'admin') { %>
+          <li class="nav-item"><a href="/admin/manage-monitors" class="nav-link text-white">Manage Monitors</a></li>
+      <% } %>
+
       <li class="nav-item"><a href="/auth/logout" class="nav-link text-white">Log Out</a></li>
   </ul>
 </div>

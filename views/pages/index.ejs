@@ -648,21 +648,133 @@ button.btn:hover {
     .search-container {
         display: none;
     }
+    .next-section {
+        display: none;
+    }
 }
 
-/* about section */
+/* Ensure the image is aligned properly on large screens */
 .s-image {
-    position: absolute; 
-    top: 55%; 
-    left: 10%;
-    margin-top:-25%;
-    transform: translateY(50%);
-    background: #fff;
+  position: absolute;
+  top: 55%;
+  left: 10%;
+  margin-top: -25%;
+  transform: translateY(50%);
+  background: #fff;
 }
+
 .waves-circles-opacity {
-    left: 0;
-    bottom: 0;
+  left: 0;
+  bottom: 0;
 }
+
+@media (max-width: 991px) {
+  /* On tablets and smaller screens: stack the columns vertically and adjust image sizes */
+  .row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .col-lg-6 {
+    flex: 0 0 100%; /* Make both columns take full width */
+    max-width: 100%;
+  }
+  
+  /* Adjust the hero image size */
+  .f-image {
+    width: 85%; /* Slightly reduce image size */
+    align-self: center; /* Center the image */
+    transform: translateY(-30%);
+    
+    
+  }
+
+  /* Adjust the overlapping small image */
+  .s-image {
+    width: 70%; /* Reduce size of the second image */
+    top: 20%; /* Move it down to avoid overlap */
+    left: 15%; /* Adjust left positioning */
+    margin-top: 0;
+    transform: translateY(0);
+  }
+
+  /* Center the content of the second column */
+  .col-lg-6 .d-flex {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Ensure the Read More button is centered */
+  .btn-primary {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 576px) {
+
+  .f-image {
+    width: 100%; /* Reduce image size even more */
+  }
+
+  .s-image {
+    width: 80%; 
+    top: 10%; 
+    left: 20%; 
+  }
+
+  /* Stack the content in a single column with more padding */
+  .col-lg-6 .d-flex {
+    padding: 10px; /* Add some padding for smaller screens */
+  }
+}
+
+@media (max-width: 992px) and (min-width: 583px) {
+  .welcome-section {
+    margin-top: 200px !important;
+  }
+  .row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .col-lg-6 {
+    flex: 0 0 100%; /* Make both columns take full width */
+    max-width: 100%;
+  }
+
+  /* Adjust the hero image size */
+  .f-image {
+    width: 80%; /* Reduce image size slightly */
+    align-self: center; /* Center the image */
+  }
+
+  /* Adjust the overlapping small image */
+  .s-image {
+    width: 65%; /* Reduce size of the second image */
+    top: 25%; /* Move it down to avoid overlap */
+    left: 15%; /* Adjust left positioning */
+    margin-top: 0;
+    transform: translateY(-20%);
+  }
+
+  /* Center the content of the second column */
+  .col-lg-6 .d-flex {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Ensure the Read More button is centered */
+  .btn-primary {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 
     </style>
 </head>
@@ -744,25 +856,26 @@ button.btn:hover {
     </section>
     <div class="next-section"></div>
 
-    <div class="container-xxl py-5 mt-5">
-        <div class="container">
-          <div class="row g-5">
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-              <div class="d-flex flex-column position-relative pt-3">
-                <img class="img-fluid rounded w-75 align-self-end f-image" src="/images/hero-1.jpg" alt="Guesthouse image">
-                <img class="img-fluid rounded w-50 pt-3 pe-3 s-image" src="/images/hero-1.jpg" alt="Guesthouse image">
-              </div>
+    <div class="welcome-section py-5 mt-5">
+        <div class="container px-4">
+            <div class="row g-5">
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="d-flex flex-column position-relative">
+                        <img class="img-fluid rounded w-75 align-self-end f-image" src="/images/hero-1.jpg" alt="Guesthouse image">
+                        <img class="img-fluid rounded w-50 pt-3 pe-3 s-image" src="/images/outdoors/outdoor-4.jpg" alt="Guesthouse image">
+                    </div>
+                </div>
+                <div class="col-lg-6 d-flex flex-column" data-aos="fade-up" data-aos-delay="500">
+                    <h2 class="mb-4 text-black">Welcome to 
+                        <span class="section-title welcome-title">Ocean Breeze</span></h2>
+                    <p class="mb-4 fs-5 text-muted">At our guesthouse, we strive to provide a comfortable and memorable experience for all our guests. From cozy rooms to top-notch amenities, we ensure that your stay is special.</p>
+                    <p class="mb-4 fs-5 text-muted">We offer affordable accommodation, excellent service, and a variety of facilities to meet all your needs during your stay. Whether you're here for a relaxing vacation or a business trip, we have everything you need.</p>
+                    <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="/about">Read More</a>
+                </div>
             </div>
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500">
-              <h2 class="mb-4 text-black">Welcome to 
-                <span class="section-title welcome-title">Buffalo Lodge</span></h1>
-              <p class="mb-4 fs-5 text-muted">At our guesthouse, we strive to provide a comfortable and memorable experience for all our guests. From cozy rooms to top-notch amenities, we ensure that your stay is special.</p>
-              <p class="mb-4 fs-5 text-muted">We offer affordable accommodation, excellent service, and a variety of facilities to meet all your needs during your stay. Whether you're here for a relaxing vacation or a business trip, we have everything you need.</p>
-              <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="/about">Read More</a>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
+    
 
       <section class="amenities-section py-5 position-relative">
         <div class="dim-bg-color"></div>
